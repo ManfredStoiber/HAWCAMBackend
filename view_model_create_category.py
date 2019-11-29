@@ -7,7 +7,7 @@ class ViewModelCreateCategory:
 		self.dict = string_as_dict
 	
 	def to_model(self, data):
-		return Category(data["Name"], data["Details"])
+		return Category(data["name"], data["details"], data["deleted"])
 	
 
 

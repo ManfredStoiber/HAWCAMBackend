@@ -1,9 +1,15 @@
 class DetailArgument:
 	def __init__(self, y):	
-		self.d_name = y["d_name"]
-		self.d_typ = y["d_typ"]
+		self.name = y["name"]
+		self.typ = y["typ"]
+		self.mandatory = y["mandatory"]
+		self.deleted = y["deleted"]
+
 	def __str__(self):
-		return "Name = " + str(self.d_name) + ", Typ = " + str(self.d_typ)
+		return "Name = " + str(self.name) + ", Typ = " + str(self.typ) + ", Pflichtfeld = " + str(self.mandatory) + ", geloescht = " + str(self.deleted)
+
+	def getTupel(self):
+		return (self.name, self.typ, self.mandatory, self.deleted)
 
 
 class CategoryDetail:
@@ -25,8 +31,13 @@ class CategoryDetail:
 
 
 class Category:	
-	def __init__(self, name, details):
+	def __init__(self, name, details, deleted):
 		self.name = name
 		self.details = CategoryDetail(**details)
+		self.deleted = deleted
+
 	def __str__(self):
 		return "Kategoriename = " + str(self.name) + ", Kategoriedetails: " + str(self.details)
+
+	def getTupel(self):
+		return (self.name, self.deleted)

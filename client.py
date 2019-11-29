@@ -2,17 +2,22 @@ import json
 from urllib.request import urlopen
 
 data={
-	"Name":"Raum", 
-	"Details":{
-		"Detail1":{
-			"d_name":"Bestuhlungstyp",
-			"d_typ":"Einfaches Textfeld"
+	"name":"Raum", 
+	"details":{
+		"detail":{
+			"name":"Bestuhlungstyp",
+			"typ":"Einfaches Textfeld",
+			"mandatory":"ja",
+			"deleted":"nein"
 		},
-		"Detail2":{
-			"d_name":"Garantie bis",
-			"d_typ":"Datum"
+		"detail":{
+			"name":"Garantie bis",
+			"typ":"Datum",
+			"mandatory":"ja",
+			"deleted":"ja"
 		}
-	}
+	},
+	"deleted":"nein"
 }
 		
 	
