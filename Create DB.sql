@@ -4,34 +4,26 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
--- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `eidb` DEFAULT CHARACTER SET utf8;
+USE `eidb` ;
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Table `eidb`.`Objects`
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
-
--- -----------------------------------------------------
--- Table `mydb`.`Objects`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Objects` (
+CREATE TABLE IF NOT EXISTS `eidb`.`Objects` (
   `idObjects` INT NOT NULL AUTO_INCREMENT,
   `Name` VARCHAR(300) NOT NULL,
   `deleted` TINYINT NOT NULL DEFAULT 0,
   `description` VARCHAR(400) NULL,
   PRIMARY KEY (`idObjects`),
   UNIQUE INDEX `idObjects_UNIQUE` (`idObjects` ASC) VISIBLE,
-  UNIQUE INDEX `Name_UNIQUE` (`Name` ASC) VISIBLE)
-ENGINE = InnoDB;
+  UNIQUE INDEX `Name_UNIQUE` (`Name` ASC) VISIBLE);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Object_to_Object`
+-- Table `eidb`.`Object_to_Object`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Object_to_Object` (
+CREATE TABLE IF NOT EXISTS `eidb`.`Object_to_Object` (
   `prim_idObject` INT NOT NULL,
   `sec_idObject` INT NOT NULL,
   `Obligated` TINYINT NOT NULL,
@@ -39,67 +31,63 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Object_to_Object` (
   INDEX `secObjectid_idx` (`sec_idObject` ASC) VISIBLE,
   CONSTRAINT `primObjectid`
     FOREIGN KEY (`prim_idObject`)
-    REFERENCES `mydb`.`Objects` (`idObjects`)
+    REFERENCES `eidb`.`Objects` (`idObjects`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `secObjectid`
     FOREIGN KEY (`sec_idObject`)
-    REFERENCES `mydb`.`Objects` (`idObjects`)
+    REFERENCES `eidb`.`Objects` (`idObjects`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Categories`
+-- Table `eidb`.`Categories`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Categories` (
+CREATE TABLE IF NOT EXISTS `eidb`.`Categories` (
   `idCategories` INT NOT NULL AUTO_INCREMENT,
   `Category_name` VARCHAR(45) NOT NULL,
   `deleted` TINYINT NOT NULL DEFAULT 0,
-  PRIMARY KEY (`idCategories`))
-ENGINE = InnoDB;
+  PRIMARY KEY (`idCategories`));
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Object_to_category`
+-- Table `eidb`.`Object_to_category`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Object_to_category` (
+CREATE TABLE IF NOT EXISTS `eidb`.`Object_to_category` (
   `idObject` INT NOT NULL,
   `idcategorie` INT NOT NULL,
   PRIMARY KEY (`idObject`, `idcategorie`),
   INDEX `idCategorie_object_toCathegorie_idx` (`idcategorie` ASC) VISIBLE,
   CONSTRAINT `idObject_object_to_categorie`
     FOREIGN KEY (`idObject`)
-    REFERENCES `mydb`.`Objects` (`idObjects`)
+    REFERENCES `eidb`.`Objects` (`idObjects`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `idCategorie_object_toCathegorie`
     FOREIGN KEY (`idcategorie`)
-    REFERENCES `mydb`.`Categories` (`idCategories`)
+    REFERENCES `eidb`.`Categories` (`idCategories`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Attribues`
+-- Table `eidb`.`Attribues`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Attribues` (
+CREATE TABLE IF NOT EXISTS `eidb`.`Attribues` (
   `idAttribues` INT NOT NULL AUTO_INCREMENT,
   `Name` VARCHAR(45) NOT NULL,
   `deleted` TINYINT NOT NULL DEFAULT 0,
   `Datatype` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idAttribues`),
   UNIQUE INDEX `idAttribues_UNIQUE` (`idAttribues` ASC) VISIBLE,
-  UNIQUE INDEX `Name_UNIQUE` (`Name` ASC) VISIBLE)
-ENGINE = InnoDB;
+  UNIQUE INDEX `Name_UNIQUE` (`Name` ASC) VISIBLE);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Categorie_to_Attributes`
+-- Table `eidb`.`Categorie_to_Attributes`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Categorie_to_Attributes` (
+CREATE TABLE IF NOT EXISTS `eidb`.`Categorie_to_Attributes` (
   `idCategorie` INT NOT NULL,
   `idAttribute` INT NOT NULL,
   `mandatory` TINYINT NULL,
@@ -107,21 +95,20 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Categorie_to_Attributes` (
   INDEX `idAttribute_Categorie_to_Attributes_idx` (`idAttribute` ASC) VISIBLE,
   CONSTRAINT `idCategorie_Categorie_to_Attributes`
     FOREIGN KEY (`idCategorie`)
-    REFERENCES `mydb`.`Categories` (`idCategories`)
+    REFERENCES `eidb`.`Categories` (`idCategories`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `idAttribute_Categorie_to_Attributes`
     FOREIGN KEY (`idAttribute`)
-    REFERENCES `mydb`.`Attribues` (`idAttribues`)
+    REFERENCES `eidb`.`Attribues` (`idAttribues`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Objectentity`
+-- Table `eidb`.`Objectentity`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Objectentity` (
+CREATE TABLE IF NOT EXISTS `eidb`.`Objectentity` (
   `idObject` INT NOT NULL,
   `idObjectentity` INT NOT NULL AUTO_INCREMENT,
   `deleted` TINYINT NOT NULL DEFAULT 0,
@@ -129,26 +116,24 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Objectentity` (
   PRIMARY KEY (`idObjectentity`, `idObject`),
   CONSTRAINT `idObject_Objectentity`
     FOREIGN KEY (`idObject`)
-    REFERENCES `mydb`.`Objects` (`idObjects`)
+    REFERENCES `eidb`.`Objects` (`idObjects`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Usergroup`
+-- Table `eidb`.`Usergroup`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Usergroup` (
+CREATE TABLE IF NOT EXISTS `eidb`.`Usergroup` (
   `idUsergroup` INT NOT NULL AUTO_INCREMENT,
   `Usergroupname` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`idUsergroup`))
-ENGINE = InnoDB;
+  PRIMARY KEY (`idUsergroup`));
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`users`
+-- Table `eidb`.`users`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`users` (
+CREATE TABLE IF NOT EXISTS `eidb`.`users` (
   `idusers` INT NOT NULL AUTO_INCREMENT,
   `username` VARCHAR(45) NOT NULL,
   `userpassword` VARCHAR(45) NOT NULL,
@@ -159,48 +144,45 @@ CREATE TABLE IF NOT EXISTS `mydb`.`users` (
   INDEX `idusergroup_users_idx` (`idusergroup` ASC) VISIBLE,
   CONSTRAINT `idusergroup_users`
     FOREIGN KEY (`idusergroup`)
-    REFERENCES `mydb`.`Usergroup` (`idUsergroup`)
+    REFERENCES `eidb`.`Usergroup` (`idUsergroup`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`permissions`
+-- Table `eidb`.`permissions`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`permissions` (
+CREATE TABLE IF NOT EXISTS `eidb`.`permissions` (
   `idpermissions` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `description` VARCHAR(400) NOT NULL,
-  PRIMARY KEY (`idpermissions`))
-ENGINE = InnoDB;
+  PRIMARY KEY (`idpermissions`));
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`usergroup_to_permissions`
+-- Table `eidb`.`usergroup_to_permissions`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`usergroup_to_permissions` (
+CREATE TABLE IF NOT EXISTS `eidb`.`usergroup_to_permissions` (
   `idusergroup` INT NOT NULL,
   `idpermission` INT NOT NULL,
   PRIMARY KEY (`idusergroup`, `idpermission`),
   INDEX `idpermission_usergroup_to_permissions_idx` (`idpermission` ASC) VISIBLE,
   CONSTRAINT `idusergroup_usergroup_to_permissions`
     FOREIGN KEY (`idusergroup`)
-    REFERENCES `mydb`.`Usergroup` (`idUsergroup`)
+    REFERENCES `eidb`.`Usergroup` (`idUsergroup`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `idpermission_usergroup_to_permissions`
     FOREIGN KEY (`idpermission`)
-    REFERENCES `mydb`.`permissions` (`idpermissions`)
+    REFERENCES `eidb`.`permissions` (`idpermissions`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Comments`
+-- Table `eidb`.`Comments`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Comments` (
+CREATE TABLE IF NOT EXISTS `eidb`.`Comments` (
   `idComments` INT NOT NULL AUTO_INCREMENT,
   `idobjectentity` INT NOT NULL,
   `comment` VARCHAR(400) NOT NULL,
@@ -209,27 +191,25 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Comments` (
   INDEX `idobjectentity_Comments_idx` (`idobjectentity` ASC) VISIBLE,
   CONSTRAINT `idobjectentity_Comments`
     FOREIGN KEY (`idobjectentity`)
-    REFERENCES `mydb`.`Objectentity` (`idObject`)
+    REFERENCES `eidb`.`Objectentity` (`idObject`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`organisations`
+-- Table `eidb`.`organisations`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`organisations` (
+CREATE TABLE IF NOT EXISTS `eidb`.`organisations` (
   `idorganisations` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   `kostenstelle` VARCHAR(45) NULL,
-  PRIMARY KEY (`idorganisations`))
-ENGINE = InnoDB;
+  PRIMARY KEY (`idorganisations`));
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`customer`
+-- Table `eidb`.`customer`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`customer` (
+CREATE TABLE IF NOT EXISTS `eidb`.`customer` (
   `idcustomer` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(60) NOT NULL,
   `tel` VARCHAR(15) NULL,
@@ -240,16 +220,15 @@ CREATE TABLE IF NOT EXISTS `mydb`.`customer` (
   INDEX `idorganisation_customer_idx` (`idorganisation` ASC) VISIBLE,
   CONSTRAINT `idorganisation_customer`
     FOREIGN KEY (`idorganisation`)
-    REFERENCES `mydb`.`organisations` (`idorganisations`)
+    REFERENCES `eidb`.`organisations` (`idorganisations`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`reservations`
+-- Table `eidb`.`reservations`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`reservations` (
+CREATE TABLE IF NOT EXISTS `eidb`.`reservations` (
   `idobjectentity` INT NOT NULL,
   `startdate` DATE NOT NULL,
   `enddate` DATE NOT NULL,
@@ -260,21 +239,20 @@ CREATE TABLE IF NOT EXISTS `mydb`.`reservations` (
   INDEX `idcustomer_reservations_idx` (`idcustomer` ASC) VISIBLE,
   CONSTRAINT `idcustomer_reservations`
     FOREIGN KEY (`idcustomer`)
-    REFERENCES `mydb`.`customer` (`idcustomer`)
+    REFERENCES `eidb`.`customer` (`idcustomer`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `idobjectentitiy_reservations`
     FOREIGN KEY (`idobjectentity`)
-    REFERENCES `mydb`.`Objectentity` (`idObjectentity`)
+    REFERENCES `eidb`.`Objectentity` (`idObjectentity`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`loans`
+-- Table `eidb`.`loans`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`loans` (
+CREATE TABLE IF NOT EXISTS `eidb`.`loans` (
   `idcustomer` INT NOT NULL,
   `idobjectentity` INT NOT NULL,
   `startdate` DATE NOT NULL,
@@ -284,21 +262,20 @@ CREATE TABLE IF NOT EXISTS `mydb`.`loans` (
   INDEX `idonjectetity_loans_idx` (`idobjectentity` ASC) VISIBLE,
   CONSTRAINT `idcustomer_loans`
     FOREIGN KEY (`idcustomer`)
-    REFERENCES `mydb`.`customer` (`idcustomer`)
+    REFERENCES `eidb`.`customer` (`idcustomer`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `idonjectetity_loans`
     FOREIGN KEY (`idobjectentity`)
-    REFERENCES `mydb`.`Objectentity` (`idObjectentity`)
+    REFERENCES `eidb`.`Objectentity` (`idObjectentity`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Objectenitiy_to_Objectentity`
+-- Table `eidb`.`Objectenitiy_to_Objectentity`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Objectenitiy_to_Objectentity` (
+CREATE TABLE IF NOT EXISTS `eidb`.`Objectenitiy_to_Objectentity` (
   `prim_idObjectentity` INT NOT NULL,
   `sec_idObjectentity` INT NOT NULL,
   `Obligated` TINYINT NOT NULL DEFAULT 1,
@@ -306,31 +283,29 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Objectenitiy_to_Objectentity` (
   INDEX `secObjectid_idx` (`sec_idObjectentity` ASC) VISIBLE,
   CONSTRAINT `primObjectid_Objectenitiy_to_Objectentity`
     FOREIGN KEY (`prim_idObjectentity`)
-    REFERENCES `mydb`.`Objectentity` (`idObjectentity`)
+    REFERENCES `eidb`.`Objectentity` (`idObjectentity`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `secObjectid_Objectenitiy_to_Objectentity`
     FOREIGN KEY (`sec_idObjectentity`)
-    REFERENCES `mydb`.`Objectentity` (`idObjectentity`)
+    REFERENCES `eidb`.`Objectentity` (`idObjectentity`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`detetion_reason`
+-- Table `eidb`.`detetion_reason`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`detetion_reason` (
+CREATE TABLE IF NOT EXISTS `eidb`.`detetion_reason` (
   `objectentityid` INT NOT NULL,
   `reason` VARCHAR(400) NULL,
   `date` DATETIME NOT NULL,
   PRIMARY KEY (`objectentityid`, `date`),
   CONSTRAINT `objektentityid_detetion_reason`
     FOREIGN KEY (`objectentityid`)
-    REFERENCES `mydb`.`Objectentity` (`idObjectentity`)
+    REFERENCES `eidb`.`Objectentity` (`idObjectentity`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION);
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
