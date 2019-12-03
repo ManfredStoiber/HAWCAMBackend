@@ -8,17 +8,17 @@ data={
 		"detail":{
 			"name":"Bestuhlungstyp",
 			"typ":"Einfaches Textfeld",
-			"mandatory":"ja",
-			"deleted":"nein"
+			"mandatory":"1",
+			"deleted":"0"
 		},
 		"detail":{
 			"name":"Garantie bis",
 			"typ":"Datum",
-			"mandatory":"ja",
-			"deleted":"ja"
+			"mandatory":"1",
+			"deleted":"1"
 		}
 	},
-	"deleted":"nein"
+	"deleted":"0"
 }
 
 headers = {"Content-Type": "application/json"}
