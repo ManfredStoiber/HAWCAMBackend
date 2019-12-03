@@ -3,7 +3,7 @@ import uc_create_category
 
 app = Flask(__name__, static_url_path='')
 
-@app.route('/api/v1.0/createCategory', methods=['GET', 'POST'])
+@app.route('/api/v1.0/createCategory', methods=['PUT'])
 def call_uc_create_category():
     content = request.get_json(force=True)
     uc_create_category.create_category(content)

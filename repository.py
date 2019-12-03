@@ -25,7 +25,7 @@ class Repository(RepositoryInterface):
 
 	def create_category(self, model, connection):
 		print("Category created")
-		sql_insert_query = "INSERT INTO Category (category_name, deleted) VALUES (%s, %s)"
+		sql_insert_query = "INSERT INTO Categories (Category_name, deleted) VALUES (%s, %s)"
 		sql_insert_tupel = model.getTupel()
 		self.fire_sql(connection, sql_insert_query, sql_insert_tupel)
 		sql_insert_query = "INSERT INTO Attributes (name, deleted, datatype) VALUES (%s, %s, %s)"
