@@ -1,6 +1,6 @@
 import requests
 import json
-from urllib.request import urlopen
+#from urllib.request import urlopen
 
 data={
 	"name":"Raum", 
@@ -22,8 +22,8 @@ data={
 }
 
 headers = {"Content-Type": "application/json"}
-		
-response = requests.put('http://localhost:5000/api/v1.0/createCategory', json.dumps(data).encode()) 
-	
 
-#print(response.read().decode())
+responseCreateCategory = requests.put('http://localhost:5000/api/v1.0/createCategory', json.dumps(data).encode())
+responseListCategories = requests.get('http://localhost:5000/api/v1.0/listCategories')
+
+#print(responseCreateCategory.read().decode())
