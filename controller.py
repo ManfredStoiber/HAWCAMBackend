@@ -24,6 +24,7 @@ data={
 def call_uc_create_category():
     content = request.get_json(force=True)
     uc_create_category.create_category(content)
+    return content
 
 @app.route("/api/v1.0/listCategories", methods=["GET"])
 def call_uc_list_categories():

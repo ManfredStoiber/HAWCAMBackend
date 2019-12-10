@@ -5,13 +5,13 @@ import json
 data={
 	"name":"Raum", 
 	"details":{
-		"detail":{
+		"detail1":{
 			"name":"Bestuhlungstyp",
 			"typ":"Einfaches Textfeld",
 			"mandatory":"1",
 			"deleted":"0"
 		},
-		"detail":{
+		"detail2":{
 			"name":"Garantie bis",
 			"typ":"Datum",
 			"mandatory":"1",

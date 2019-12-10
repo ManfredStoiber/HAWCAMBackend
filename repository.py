@@ -58,17 +58,21 @@ class Repository(RepositoryInterface):
 
 
     def transmit_model_to_repository(self):
-        connection = mysql.connector.connect(host = "remotemysql.com", user = "xbKMa0eIqY", passwd = "wqGNkrfAkK", db = "xbKMa0eIqY")
-        if self.uc == "createCategory":
-            self.deleteTableData(connection)
-            self.create_category(self.model, connection)
-            self.checkInsertWithSelect(connection)
-        elif self.uc == "...":
-            print("lala")
-            #...(interface.model)
-        else:
-            print("Nichts weiter")
-        connection.close()
+        try:
+            connection = mysql.connector.connect(host = "remotemysql.com", user = "xbKMa0eIqY", passwd = "wqGNkrfAkK", db = "xbKMa0eIqY")
+            if self.uc == "createCategory":
+                self.deleteTableData(connection)
+                self.create_category(self.model, connection)
+                self.checkInsertWithSelect(connection)
+            elif self.uc == "...":
+                print("lala")
+                #...(interface.model)
+            else:
+                print("Nichts weiter")
+            connection.close()
+            return True
+        except:
+            return False
 
 
 
