@@ -1,5 +1,3 @@
--- MySQL Workbench Forward Engineering
-
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
@@ -16,8 +14,8 @@ CREATE TABLE IF NOT EXISTS `eidb`.`Objects` (
   `deleted` TINYINT NOT NULL DEFAULT 0,
   `description` VARCHAR(400) NULL,
   PRIMARY KEY (`idObjects`),
-  UNIQUE INDEX `idObjects_UNIQUE` (`idObjects` ASC) VISIBLE,
-  UNIQUE INDEX `Name_UNIQUE` (`Name` ASC) VISIBLE);
+  UNIQUE INDEX `idObjects_UNIQUE` (`idObjects` ASC),
+  UNIQUE INDEX `Name_UNIQUE` (`Name` ASC));
 
 
 -- -----------------------------------------------------
@@ -28,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `eidb`.`Object_to_Object` (
   `sec_idObject` INT NOT NULL,
   `Obligated` TINYINT NOT NULL,
   PRIMARY KEY (`prim_idObject`, `sec_idObject`),
-  INDEX `secObjectid_idx` (`sec_idObject` ASC) VISIBLE,
+  INDEX `secObjectid_idx` (`sec_idObject` ASC),
   CONSTRAINT `primObjectid`
     FOREIGN KEY (`prim_idObject`)
     REFERENCES `eidb`.`Objects` (`idObjects`)
@@ -45,10 +43,9 @@ CREATE TABLE IF NOT EXISTS `eidb`.`Object_to_Object` (
 -- Table `eidb`.`Categories`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `eidb`.`Categories` (
-  `idCategories` INT NOT NULL AUTO_INCREMENT,
   `Category_name` VARCHAR(45) NOT NULL,
   `deleted` TINYINT NOT NULL DEFAULT 0,
-  PRIMARY KEY (`idCategories`));
+  PRIMARY KEY (`Category_name`));
 
 
 -- -----------------------------------------------------
@@ -58,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `eidb`.`Object_to_category` (
   `idObject` INT NOT NULL,
   `idcategorie` INT NOT NULL,
   PRIMARY KEY (`idObject`, `idcategorie`),
-  INDEX `idCategorie_object_toCathegorie_idx` (`idcategorie` ASC) VISIBLE,
+  INDEX `idCategorie_object_toCathegorie_idx` (`idcategorie` ASC),
   CONSTRAINT `idObject_object_to_categorie`
     FOREIGN KEY (`idObject`)
     REFERENCES `eidb`.`Objects` (`idObjects`)
@@ -80,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `eidb`.`Attribues` (
   `deleted` TINYINT NOT NULL DEFAULT 0,
   `Datatype` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idAttribues`),
-  UNIQUE INDEX `idAttribues_UNIQUE` (`idAttribues` ASC) VISIBLE,
+  UNIQUE INDEX `idAttribues_UNIQUE` (`idAttribues` ASC),
   UNIQUE INDEX `Name_UNIQUE` (`Name` ASC) VISIBLE);
 
 
@@ -92,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `eidb`.`Categorie_to_Attributes` (
   `idAttribute` INT NOT NULL,
   `mandatory` TINYINT NULL,
   PRIMARY KEY (`idCategorie`, `idAttribute`),
-  INDEX `idAttribute_Categorie_to_Attributes_idx` (`idAttribute` ASC) VISIBLE,
+  INDEX `idAttribute_Categorie_to_Attributes_idx` (`idAttribute` ASC),
   CONSTRAINT `idCategorie_Categorie_to_Attributes`
     FOREIGN KEY (`idCategorie`)
     REFERENCES `eidb`.`Categories` (`idCategories`)
@@ -112,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `eidb`.`Objectentity` (
   `idObject` INT NOT NULL,
   `idObjectentity` INT NOT NULL AUTO_INCREMENT,
   `deleted` TINYINT NOT NULL DEFAULT 0,
-  INDEX `idObject_Objectentity_idx` (`idObject` ASC) VISIBLE,
+  INDEX `idObject_Objectentity_idx` (`idObject` ASC),
   PRIMARY KEY (`idObjectentity`, `idObject`),
   CONSTRAINT `idObject_Objectentity`
     FOREIGN KEY (`idObject`)
@@ -139,9 +136,9 @@ CREATE TABLE IF NOT EXISTS `eidb`.`users` (
   `userpassword` VARCHAR(45) NOT NULL,
   `idusergroup` INT NULL,
   PRIMARY KEY (`idusers`),
-  UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE,
-  UNIQUE INDEX `idusers_UNIQUE` (`idusers` ASC) VISIBLE,
-  INDEX `idusergroup_users_idx` (`idusergroup` ASC) VISIBLE,
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC),
+  UNIQUE INDEX `idusers_UNIQUE` (`idusers` ASC),
+  INDEX `idusergroup_users_idx` (`idusergroup` ASC),
   CONSTRAINT `idusergroup_users`
     FOREIGN KEY (`idusergroup`)
     REFERENCES `eidb`.`Usergroup` (`idUsergroup`)
@@ -166,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `eidb`.`usergroup_to_permissions` (
   `idusergroup` INT NOT NULL,
   `idpermission` INT NOT NULL,
   PRIMARY KEY (`idusergroup`, `idpermission`),
-  INDEX `idpermission_usergroup_to_permissions_idx` (`idpermission` ASC) VISIBLE,
+  INDEX `idpermission_usergroup_to_permissions_idx` (`idpermission` ASC),
   CONSTRAINT `idusergroup_usergroup_to_permissions`
     FOREIGN KEY (`idusergroup`)
     REFERENCES `eidb`.`Usergroup` (`idUsergroup`)
@@ -188,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `eidb`.`Comments` (
   `comment` VARCHAR(400) NOT NULL,
   `date` TIMESTAMP NOT NULL,
   PRIMARY KEY (`idComments`),
-  INDEX `idobjectentity_Comments_idx` (`idobjectentity` ASC) VISIBLE,
+  INDEX `idobjectentity_Comments_idx` (`idobjectentity` ASC),
   CONSTRAINT `idobjectentity_Comments`
     FOREIGN KEY (`idobjectentity`)
     REFERENCES `eidb`.`Objectentity` (`idObject`)
@@ -217,7 +214,7 @@ CREATE TABLE IF NOT EXISTS `eidb`.`customer` (
   `lastname` VARCHAR(45) NULL,
   `idorganisation` INT NULL,
   PRIMARY KEY (`idcustomer`),
-  INDEX `idorganisation_customer_idx` (`idorganisation` ASC) VISIBLE,
+  INDEX `idorganisation_customer_idx` (`idorganisation` ASC),
   CONSTRAINT `idorganisation_customer`
     FOREIGN KEY (`idorganisation`)
     REFERENCES `eidb`.`organisations` (`idorganisations`)
@@ -236,7 +233,7 @@ CREATE TABLE IF NOT EXISTS `eidb`.`reservations` (
   `comment` VARCHAR(400) NULL,
   `active` TINYINT NOT NULL,
   PRIMARY KEY (`idobjectentity`, `startdate`),
-  INDEX `idcustomer_reservations_idx` (`idcustomer` ASC) VISIBLE,
+  INDEX `idcustomer_reservations_idx` (`idcustomer` ASC),
   CONSTRAINT `idcustomer_reservations`
     FOREIGN KEY (`idcustomer`)
     REFERENCES `eidb`.`customer` (`idcustomer`)
@@ -259,7 +256,7 @@ CREATE TABLE IF NOT EXISTS `eidb`.`loans` (
   `enddate` DATE NOT NULL,
   `returndate` DATE NULL,
   PRIMARY KEY (`idobjectentity`, `startdate`),
-  INDEX `idonjectetity_loans_idx` (`idobjectentity` ASC) VISIBLE,
+  INDEX `idonjectetity_loans_idx` (`idobjectentity` ASC),
   CONSTRAINT `idcustomer_loans`
     FOREIGN KEY (`idcustomer`)
     REFERENCES `eidb`.`customer` (`idcustomer`)
@@ -280,7 +277,7 @@ CREATE TABLE IF NOT EXISTS `eidb`.`Objectenitiy_to_Objectentity` (
   `sec_idObjectentity` INT NOT NULL,
   `Obligated` TINYINT NOT NULL DEFAULT 1,
   PRIMARY KEY (`prim_idObjectentity`, `sec_idObjectentity`),
-  INDEX `secObjectid_idx` (`sec_idObjectentity` ASC) VISIBLE,
+  INDEX `secObjectid_idx` (`sec_idObjectentity` ASC),
   CONSTRAINT `primObjectid_Objectenitiy_to_Objectentity`
     FOREIGN KEY (`prim_idObjectentity`)
     REFERENCES `eidb`.`Objectentity` (`idObjectentity`)
