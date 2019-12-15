@@ -1,3 +1,4 @@
+USE `eidb` ;
 DELIMITER $$
 CREATE TRIGGER addAttribute
 AFTER INSERT

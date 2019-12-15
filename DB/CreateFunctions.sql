@@ -1,3 +1,4 @@
+USE `eidb` ;
 DELIMITER //
 CREATE PROCEDURE addattributef(x varchar(20), y varchar(40))
 BEGIN
