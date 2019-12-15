@@ -4,20 +4,20 @@ import uc_create_category
 app = Flask(__name__, static_url_path='')
 
 data = {
-    "categories": {
-        "1": {
+    "categories": [
+        {
             "name": "Raum",
             "count": 3
         },
-        "2": {
+        {
             "name": "Buch",
             "count": 14
         },
-        "3": {
+        {
             "name": "Rechner",
             "count": 10
         }
-    }
+    ]
 }
 
 
