@@ -6,5 +6,5 @@ class RepositoryTest(unittest.TestCase):
 
     def test_repository(self):
         r = Repository("test", "createCategory")
-        check = r.transmit_model_to_repository()
+        check = r.connect_with_db()
         self.assertEqual(check, False)

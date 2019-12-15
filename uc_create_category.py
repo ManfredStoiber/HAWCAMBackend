@@ -12,7 +12,7 @@ def create_category(content):
     view = ViewModelCreateCategory(string_as_dict)
     repository = Repository(view.to_model(), "createCategory")
     if repository is not None:
-        check = repository.transmit_model_to_repository()
+        check = repository.connect_with_db()
     else:
         check = False
     return check

@@ -7,17 +7,37 @@ class Repository(RepositoryInterface):
     def __init__(self, model, uc):
         super().__init__(model, uc)
 
-    def fire_sql(self, connection, query, tupel):
-        try:
-            cursor = connection.cursor(prepared=True)
-            cursor.execute(query, tupel)
-            connection.commit()
-        except mysql.connector.Error as error:
-            print("parameterized query failed {}".format(error))
-        finally:
-            temp = cursor.lastrowid
-            cursor.close()
-            return temp
+    def __init__(self, uc):
+        super().__init__(uc)
+
+    def fire_sql(self, connection, query, prepared, tupel):
+        result = False
+        if (prepared == True):
+            try:
+                cursor = connection.cursor(prepared=True)
+                cursor.execute(query, tupel)
+                connection.commit()
+                result = True
+            except mysql.connector.Error as error:
+                print("parameterized query failed {}".format(error))
+            finally:
+                if(result == True):
+                    temp = cursor.lastrowid
+                    cursor.close()
+                    return temp
+                else:
+                    return False
+        else:
+            try:
+                cursor = connection.cursor()
+                cursor.execute(query)
+                result = cursor.fetchall()
+                return result
+            except mysql.connector.Error as error:
+                print("select statement failed {}".format(error))
+            finally:
+                cursor.close()
+
 
     def check_insert_with_select(self, connection):
         mycursor = connection.cursor()
@@ -34,13 +54,16 @@ class Repository(RepositoryInterface):
         for x in myresult:
             print("Attribute_to_Category: " + str(x))
 
+
     def delete_table_data(self, connection):
         mycursor = connection.cursor()
         mycursor.execute("Delete From Categorie_to_Attributes")
         mycursor.execute("Delete From Categories")
         mycursor.execute("Delete From Attribues")
 
+
     def create_category(self, model, connection):
+        result = None
         sql_insert_cat_query = "INSERT INTO Categories (Category_name, deleted) VALUES (%s, %s)"
         sql_insert_tupel = model.getTupel()
         cat_key = self.fire_sql(connection, sql_insert_cat_query, sql_insert_tupel)
@@ -49,24 +72,34 @@ class Repository(RepositoryInterface):
         for detail in model.details.detail_list:
             temp_tupel = (detail.getTupel()[0], detail.getTupel()[1], detail.getTupel()[3])  # ohne mandatory
             sql_insert_tupel = temp_tupel
-            attr_key = self.fire_sql(connection, sql_insert_attr_query, sql_insert_tupel)
+            result = attr_key = self.fire_sql(connection, sql_insert_attr_query, True, sql_insert_tupel)
             sql_insert_tupel = (cat_key, attr_key, detail.getTupel()[2])
-            self.fire_sql(connection, sql_insert_relation_query, sql_insert_tupel)
+            result = self.fire_sql(connection, sql_insert_relation_query, True, sql_insert_tupel)
+        return result
 
-    def transmit_model_to_repository(self):
+
+    def list_categories(self, connection):
+        sql_select_cat_query = "Select Category_name as Name, Count(idObject) as Anzahl From Categories C " \
+                               "Inner Join  Object_to_category OC on C.idCategories = OC.idCategories " \
+                               "Group By C.idCategories Order by Category_name ASC"
+        result = self.fire_sql(connection, sql_select_cat_query, True, tupel=None)
+        return result
+
+
+    def connect_with_db(self):
         try:
             connection = mysql.connector.connect(host="remotemysql.com", user="xbKMa0eIqY", passwd="wqGNkrfAkK",
                                                  db="xbKMa0eIqY")
+            result = False
             if self.uc == "createCategory":
                 self.delete_table_data(connection)
-                self.create_category(self.model, connection)
+                result = self.create_category(self.model, connection)
                 self.check_insert_with_select(connection)
-            elif self.uc == "...":
-                print("lala")
-                # ...(interface.model)
+            elif self.uc == "listCategories":
+                result = self.list_categories(connection)
             else:
                 print("Nichts weiter")
             connection.close()
-            return True
+            return result
         except:
             return False

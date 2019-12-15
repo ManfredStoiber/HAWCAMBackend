@@ -6,6 +6,7 @@ class RepositoryInterface:
 		self.model = model
 		self.uc = uc
 	
-
+	def __init__(self, uc):
+		self.uc = uc
 		
 
