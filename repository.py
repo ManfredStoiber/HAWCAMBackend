@@ -1,11 +1,11 @@
 import mysql.connector
 from repository_interface import RepositoryInterface
 
+
 class Repository(RepositoryInterface):
 
     def __init__(self, model, uc):
         super().__init__(model, uc)
-
 
     def fire_sql(self, connection, query, tupel):
         try:
@@ -19,8 +19,7 @@ class Repository(RepositoryInterface):
             cursor.close()
             return temp
 
-
-    def checkInsertWithSelect(self, connection):
+    def check_insert_with_select(self, connection):
         mycursor = connection.cursor()
         mycursor.execute("Select * From Categories")
         myresult = mycursor.fetchall()
@@ -35,13 +34,11 @@ class Repository(RepositoryInterface):
         for x in myresult:
             print("Attribute_to_Category: " + str(x))
 
-
-    def deleteTableData(self, connection):
+    def delete_table_data(self, connection):
         mycursor = connection.cursor()
         mycursor.execute("Delete From Categorie_to_Attributes")
         mycursor.execute("Delete From Categories")
         mycursor.execute("Delete From Attribues")
-
 
     def create_category(self, model, connection):
         sql_insert_cat_query = "INSERT INTO Categories (Category_name, deleted) VALUES (%s, %s)"
@@ -50,29 +47,26 @@ class Repository(RepositoryInterface):
         sql_insert_attr_query = "INSERT INTO Attribues (Name, Datatype, deleted) VALUES (%s, %s, %s)"
         sql_insert_relation_query = "INSERT INTO Categorie_to_Attributes (idCategorie, idAttribute, mandatory) VALUES (%s, %s, %s)"
         for detail in model.details.detail_list:
-            temp_tupel = (detail.getTupel()[0], detail.getTupel()[1], detail.getTupel()[3]) #ohne mandatory
+            temp_tupel = (detail.getTupel()[0], detail.getTupel()[1], detail.getTupel()[3])  # ohne mandatory
             sql_insert_tupel = temp_tupel
             attr_key = self.fire_sql(connection, sql_insert_attr_query, sql_insert_tupel)
             sql_insert_tupel = (cat_key, attr_key, detail.getTupel()[2])
             self.fire_sql(connection, sql_insert_relation_query, sql_insert_tupel)
 
-
     def transmit_model_to_repository(self):
         try:
-            connection = mysql.connector.connect(host = "remotemysql.com", user = "xbKMa0eIqY", passwd = "wqGNkrfAkK", db = "xbKMa0eIqY")
+            connection = mysql.connector.connect(host="remotemysql.com", user="xbKMa0eIqY", passwd="wqGNkrfAkK",
+                                                 db="xbKMa0eIqY")
             if self.uc == "createCategory":
-                self.deleteTableData(connection)
+                self.delete_table_data(connection)
                 self.create_category(self.model, connection)
-                self.checkInsertWithSelect(connection)
+                self.check_insert_with_select(connection)
             elif self.uc == "...":
                 print("lala")
-                #...(interface.model)
+                # ...(interface.model)
             else:
                 print("Nichts weiter")
             connection.close()
             return True
         except:
             return False
-
-
-

@@ -1,6 +1,7 @@
 import json
 from model_category import *
 
+
 class ViewModelCreateCategory:
 
 	def __init__(self, string_as_dict):

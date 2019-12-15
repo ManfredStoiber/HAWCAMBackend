@@ -1,37 +1,41 @@
 import sys, unittest, json
-#sys.path.append("..\HAWCAMBackend")
+# sys.path.append("..\HAWCAMBackend")
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
+
 class ControllerTest(unittest.TestCase):
 
     def test_uc_create_category_call(self):
-        with app.app_context():
-            yield
-        data={
-            "name": "Raum",
-            "details": {
-                "detail1": {
-                    "name": "Bestuhlungstyp",
-                    "typ": "Einfaches Textfeld",
-                    "mandatory": "1",
+        with app.app_context() as ctx:
+            with app.test_client() as client:
+                data = {
+                    "name": "Raum",
+                    "details": {
+                        "detail1": {
+                            "name": "Bestuhlungstyp",
+                            "typ": "Einfaches Textfeld",
+                            "mandatory": "1",
+                            "deleted": "0"
+                        },
+                        "detail2": {
+                            "name": "Garantie bis",
+                            "typ": "Datum",
+                            "mandatory": "1",
+                            "deleted": "1"
+                        }
+                    },
                     "deleted": "0"
-                },
-                "detail2": {
-                    "name": "Garantie bis",
-                    "typ": "Datum",
-                    "mandatory": "1",
-                    "deleted": "1"
                 }
-            },
-            "deleted": "0"
-        }
-        app.testing = True
-        client = app.test_client()
-        response = client.post("/api/v1.0/createCategory", json=data)
-        json_data = response.get_json()
-        self.assertEqual(json_data, jsonify(data))
+                app.testing = True
+                response = client.post("/api/v1.0/createCategory", json=data)
+                json_data = response.get_json()
+                # Fehlersuche, warum Flask-Api nicht erreichbar
+                print("response = " + str(response))
+                print("json_data = " + str(json_data))
+                print("jsonify(data) = " + str(data))
+                self.assertEqual(json_data, jsonify(data))
 
     def test_uc_list_categories_call(self):
         with app.app_context():
