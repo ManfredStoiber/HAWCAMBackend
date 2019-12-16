@@ -7,7 +7,6 @@ class Repository(RepositoryInterface):
     def __init__(self, model, uc):
         super().__init__(model, uc)
 
-
     def fire_sql(self, connection, query, prepared, tupel):
         result = False
         if (prepared == True):
@@ -19,7 +18,7 @@ class Repository(RepositoryInterface):
             except mysql.connector.Error as error:
                 print("parameterized query failed {}".format(error))
             finally:
-                if(result == True):
+                if (result == True):
                     temp = cursor.lastrowid
                     cursor.close()
                     return temp
@@ -36,7 +35,6 @@ class Repository(RepositoryInterface):
                 cursor.close()
                 return result
 
-
     def check_insert_with_select(self, connection):
         mycursor = connection.cursor()
         mycursor.execute("Select * From Categories")
@@ -52,37 +50,35 @@ class Repository(RepositoryInterface):
         for x in myresult:
             print("Attribute_to_Category: " + str(x))
 
-
     def delete_table_data(self, connection):
         mycursor = connection.cursor()
         mycursor.execute("Delete From Categorie_to_Attributes")
         mycursor.execute("Delete From Categories")
         mycursor.execute("Delete From Attribues")
 
-
     def create_category(self, model, connection):
         result = None
         sql_insert_cat_query = "INSERT INTO Categories (Category_name, deleted) VALUES (%s, %s)"
         sql_insert_tupel = model.getTupel()
-        cat_key = self.fire_sql(connection, sql_insert_cat_query, sql_insert_tupel)
+        cat_key = sql_insert_tupel[0]
+        self.fire_sql(connection, sql_insert_cat_query, sql_insert_tupel)  # idCategories hier irrelevant
         sql_insert_attr_query = "INSERT INTO Attribues (Name, Datatype, deleted) VALUES (%s, %s, %s)"
-        sql_insert_relation_query = "INSERT INTO Categorie_to_Attributes (idCategorie, idAttribute, mandatory) VALUES (%s, %s, %s)"
+        sql_insert_relation_query = "INSERT INTO Categorie_to_Attributes (Category_name, idAttribute, mandatory) " \
+                                    "VALUES (%s, %s, %s) "
         for detail in model.details.detail_list:
             temp_tupel = (detail.getTupel()[0], detail.getTupel()[1], detail.getTupel()[3])  # ohne mandatory
             sql_insert_tupel = temp_tupel
-            result = attr_key = self.fire_sql(connection, sql_insert_attr_query, True, sql_insert_tupel)
+            attr_key = self.fire_sql(connection, sql_insert_attr_query, True, sql_insert_tupel)
             sql_insert_tupel = (cat_key, attr_key, detail.getTupel()[2])
             result = self.fire_sql(connection, sql_insert_relation_query, True, sql_insert_tupel)
         return result
 
-
     def list_categories(self, connection):
-        sql_select_cat_query = "Select Category_name as Name, Count(idObject) as Anzahl From Categories C " \
-                               "Inner Join  Object_to_category OC on C.idCategories = OC.idCategorie " \
-                               "Group By C.idCategories Order by Category_name ASC"
+        sql_select_cat_query = "SELECT Category_name AS Name, Count(idObject) AS Anzahl FROM Categories C " \
+                               "INNER JOIN Object_to_category OC ON C.Category_name = OC.Category_name " \
+                               "GROUP BY C.Category_name ORDER BY Category_name ASC"
         result = self.fire_sql(connection, sql_select_cat_query, False, tupel=None)
         return result
-
 
     def connect_with_db(self):
         try:
@@ -90,7 +86,7 @@ class Repository(RepositoryInterface):
                                                  db="xbKMa0eIqY")
             result = False
             if self.uc == "createCategory":
-                self.delete_table_data(connection)
+                #self.delete_table_data(connection)
                 result = self.create_category(self.model, connection)
                 self.check_insert_with_select(connection)
             elif self.uc == "listCategories":
