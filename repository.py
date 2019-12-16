@@ -7,8 +7,6 @@ class Repository(RepositoryInterface):
     def __init__(self, model, uc):
         super().__init__(model, uc)
 
-    def __init__(self, uc):
-        super().__init__(uc)
 
     def fire_sql(self, connection, query, prepared, tupel):
         result = False
@@ -32,11 +30,11 @@ class Repository(RepositoryInterface):
                 cursor = connection.cursor()
                 cursor.execute(query)
                 result = cursor.fetchall()
-                return result
             except mysql.connector.Error as error:
                 print("select statement failed {}".format(error))
             finally:
                 cursor.close()
+                return result
 
 
     def check_insert_with_select(self, connection):
@@ -80,9 +78,9 @@ class Repository(RepositoryInterface):
 
     def list_categories(self, connection):
         sql_select_cat_query = "Select Category_name as Name, Count(idObject) as Anzahl From Categories C " \
-                               "Inner Join  Object_to_category OC on C.idCategories = OC.idCategories " \
+                               "Inner Join  Object_to_category OC on C.idCategories = OC.idCategorie " \
                                "Group By C.idCategories Order by Category_name ASC"
-        result = self.fire_sql(connection, sql_select_cat_query, True, tupel=None)
+        result = self.fire_sql(connection, sql_select_cat_query, False, tupel=None)
         return result
 
 
