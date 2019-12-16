@@ -61,7 +61,8 @@ class Repository(RepositoryInterface):
         sql_insert_cat_query = "INSERT INTO Categories (Category_name, deleted) VALUES (%s, %s)"
         sql_insert_tupel = model.getTupel()
         cat_key = sql_insert_tupel[0]
-        self.fire_sql(connection, sql_insert_cat_query, sql_insert_tupel)  # idCategories hier irrelevant
+        print("cat key = " + str(cat_key))
+        self.fire_sql(connection, sql_insert_cat_query, True, sql_insert_tupel)  # idCategories hier irrelevant
         sql_insert_attr_query = "INSERT INTO Attribues (Name, Datatype, deleted) VALUES (%s, %s, %s)"
         sql_insert_relation_query = "INSERT INTO Categorie_to_Attributes (Category_name, idAttribute, mandatory) " \
                                     "VALUES (%s, %s, %s) "

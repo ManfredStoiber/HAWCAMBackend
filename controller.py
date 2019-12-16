@@ -1,7 +1,9 @@
 from flask import Flask, send_from_directory, request, jsonify
+from flask_cors import CORS, cross_origin
 import uc_create_category, uc_list_categories
 
 app = Flask(__name__, static_url_path='')
+CORS(app)
 
 data = {
     "categories": [
@@ -24,14 +26,14 @@ data = {
 @app.route('/api/v1.0/createCategory', methods=['PUT'])
 def call_uc_create_category():
     content = request.get_json(force=True)
-    uc_create_category.create_category(content)
-    print("Content = " + str(content))
-    return content
+    check = uc_create_category.create_category(content)
+    #print("Content = " + str(content))
+    return str(check)
 
 
 @app.route("/api/v1.0/listCategories", methods=["GET"])
 def call_uc_list_categories():
-    return jsonify(data)
+    jsonify(data)
     #result = uc_list_categories.list_categories()
     #return result
 

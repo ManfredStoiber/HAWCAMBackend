@@ -23,7 +23,7 @@ data={
 
 headers = {"Content-Type": "application/json"}
 
-#responseCreateCategory = requests.put('http://localhost:5000/api/v1.0/createCategory', json.dumps(data).encode())
+#responseCreateCategory = requests.put('http://192.168.0.14:5000/api/v1.0/createCategory', json.dumps(data).encode())
 responseListCategories = requests.get('http://95.90.220.121:5000/api/v1.0/listCategories')
 print(responseListCategories)
 
