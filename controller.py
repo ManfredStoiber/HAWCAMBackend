@@ -31,8 +31,9 @@ def call_uc_create_category():
 
 @app.route("/api/v1.0/listCategories", methods=["GET"])
 def call_uc_list_categories():
-    result = uc_list_categories.list_categories()
-    return result
+    return jsonify(data)
+    #result = uc_list_categories.list_categories()
+    #return result
 
 
 if __name__ == '__main__':
