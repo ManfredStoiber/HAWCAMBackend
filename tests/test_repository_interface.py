@@ -10,3 +10,5 @@ class RepositoryInterfaceTest(unittest.TestCase):
         interface = RepositoryInterface("test", "createCategory")
         self.assertEqual(interface.model, "test")
         self.assertEqual(interface.uc, "createCategory")
+        self.assertNotEqual(interface.model, "hallo")
+        self.assertNotEqual(interface.uc, "test")

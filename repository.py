@@ -8,7 +8,6 @@ class Repository(RepositoryInterface):
         super().__init__(model, uc)
 
     def fire_sql(self, connection, query, prepared, tupel):
-        result = False
         if (prepared == True):
             try:
                 cursor = connection.cursor(prepared=True)
@@ -17,23 +16,20 @@ class Repository(RepositoryInterface):
                 result = True
             except mysql.connector.Error as error:
                 print("parameterized query failed {}".format(error))
+                raise
             finally:
-                if (result == True):
-                    temp = cursor.lastrowid
-                    cursor.close()
-                    return temp
-                else:
-                    return False
+                cursor.close()
         else:
             try:
                 cursor = connection.cursor()
                 cursor.execute(query)
                 result = cursor.fetchall()
+                return result
             except mysql.connector.Error as error:
                 print("select statement failed {}".format(error))
+                raise
             finally:
                 cursor.close()
-                return result
 
     def check_insert_with_select(self, connection):
         mycursor = connection.cursor()
@@ -57,7 +53,6 @@ class Repository(RepositoryInterface):
         mycursor.execute("Delete From Attribues")
 
     def create_category(self, model, connection):
-        result = None
         sql_insert_cat_query = "INSERT INTO Categories (Category_name, deleted) VALUES (%s, %s)"
         sql_insert_tupel = model.getTupel()
         cat_key = sql_insert_tupel[0]
@@ -71,30 +66,25 @@ class Repository(RepositoryInterface):
             sql_insert_tupel = temp_tupel
             attr_key = self.fire_sql(connection, sql_insert_attr_query, True, sql_insert_tupel)
             sql_insert_tupel = (cat_key, attr_key, detail.getTupel()[2])
-            result = self.fire_sql(connection, sql_insert_relation_query, True, sql_insert_tupel)
-        return result
+            self.fire_sql(connection, sql_insert_relation_query, True, sql_insert_tupel)
 
     def list_categories(self, connection):
-        sql_select_cat_query = "SELECT Category_name AS Name, Count(idObject) AS Anzahl FROM Categories C " \
-                               "INNER JOIN Object_to_category OC ON C.Category_name = OC.Category_name " \
-                               "GROUP BY C.Category_name ORDER BY Category_name ASC"
+        sql_select_cat_query = "SELECT C.Category_name AS Name, Count(idObject) AS Anzahl FROM Categories C " \
+                               "LEFT JOIN Object_to_category OC ON C.Category_name = OC.Category_name " \
+                               "GROUP BY C.Category_name ORDER BY C.Category_name ASC"
         result = self.fire_sql(connection, sql_select_cat_query, False, tupel=None)
         return result
 
     def connect_with_db(self):
-        try:
-            connection = mysql.connector.connect(host="remotemysql.com", user="xbKMa0eIqY", passwd="wqGNkrfAkK",
-                                                 db="xbKMa0eIqY")
-            result = False
-            if self.uc == "createCategory":
-                #self.delete_table_data(connection)
-                result = self.create_category(self.model, connection)
-                self.check_insert_with_select(connection)
-            elif self.uc == "listCategories":
-                result = self.list_categories(connection)
-            else:
-                print("Nichts weiter")
-            connection.close()
+        connection = mysql.connector.connect(host="remotemysql.com", user="xbKMa0eIqY", passwd="wqGNkrfAkK",
+                                             db="xbKMa0eIqY", connect_timeout=1000)
+        if self.uc == "createCategory":
+            # self.delete_table_data(connection)
+            self.create_category(self.model, connection)
+            self.check_insert_with_select(connection)
+        elif self.uc == "listCategories":
+            result = self.list_categories(connection)
             return result
-        except:
-            return False
+        else:
+            print("Nichts weiter")
+        connection.close()
