@@ -1,8 +1,9 @@
 import sys, unittest, json
 # sys.path.append("..\HAWCAMBackend")
 from flask import Flask, jsonify, request
-
-app = Flask(__name__)
+from controller import app
+import urllib.request
+import controller
 
 
 class ControllerTest(unittest.TestCase):
@@ -29,37 +30,22 @@ class ControllerTest(unittest.TestCase):
                     "deleted": "0"
                 }
                 app.testing = True
-                response = client.post("/api/v1.0/createCategory", json=data)
+                response = client.put("http://localhost:5000/api/v1.0/createCategory", json=json.dumps(data))
                 json_data = response.get_json()
                 # Fehlersuche, warum Flask-Api nicht erreichbar
                 print("response = " + str(response))
                 print("json_data = " + str(json_data))
-                print("jsonify(data) = " + str(data))
+                print("jsonify(data) = " + str(jsonify(data)))
                 self.assertEqual(json_data, jsonify(data))
 
-    def test_uc_list_categories_call(self):
-        with app.app_context():
-            yield
-        data = {
-            "categories": {
-                "category1": {
-                    "name": "Raum",
-                    "count": 3
-                },
-                "category2": {
-                    "name": "Buch",
-                    "count": 14
-                },
-                "category3": {
-                    "name": "Rechner",
-                    "count": 10
-                }
-            }
-        }
-        client = app.test_client()
-        response = client.get("/api/v1.0/listCategories")
-        json_data = response.get_json()
-        self.assertEqual(json_data, jsonify(data))
+    def create_app(self):
+        self.app = controller.app.test_client()
+        app.config['TESTING'] = True
+
+    def test_server_is_up_and_running(self):
+        self.create_app()
+        response = urllib.request.urlopen("http://localhost:5000/api/v1.0/listCategories")
+        self.assertEqual(response.code, 200)
 
     if __name__ == "__main__":
         unittest.main()

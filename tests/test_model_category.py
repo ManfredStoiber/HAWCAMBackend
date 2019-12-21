@@ -6,17 +6,17 @@ from model_category import DetailArgument, CategoryDetail, Category
 class ModelCategoryTest(unittest.TestCase):
     dataLong = {
         "name": "Raum",
-        "details": {
-            "detail1": {
+        "contentDescriptions": {
+            "1": {
                 "name": "Bestuhlungstyp",
                 "typ": "Einfaches Textfeld",
-                "mandatory": "1",
+                "optionalOrMandatory": "1",
                 "deleted": "0"
             },
-            "detail2": {
+            "2": {
                 "name": "Garantie bis",
                 "typ": "Datum",
-                "mandatory": "1",
+                "optionalOrMandatory": "1",
                 "deleted": "1"
             }
         },
@@ -24,16 +24,16 @@ class ModelCategoryTest(unittest.TestCase):
     }
 
     dataMiddle = {
-        "detail1": {
+        "1": {
             "name": "Bestuhlungstyp",
             "typ": "Einfaches Textfeld",
-            "mandatory": "1",
+            "optionalOrMandatory": "1",
             "deleted": "0"
         },
-        "detail2": {
+        "2": {
             "name": "Garantie bis",
             "typ": "Datum",
-            "mandatory": "1",
+            "optionalOrMandatory": "1",
             "deleted": "1"
         }
     }
@@ -41,7 +41,7 @@ class ModelCategoryTest(unittest.TestCase):
     dataShort = {
         "name": "Bestuhlungstyp",
         "typ": "Einfaches Textfeld",
-        "mandatory": "1",
+        "optionalOrMandatory": "1",
         "deleted": "0"
     }
 
@@ -50,14 +50,16 @@ class ModelCategoryTest(unittest.TestCase):
         self.assertEqual(da.getTupel(), ("Bestuhlungstyp", "Einfaches Textfeld", "1", "0"))
         #self.assertEqual(str(da), "Name = Bestuhlungstyp, Typ = Einfaches Textfeld, Pflichtfeld = 1, geloescht = 0")
 
-    #def test_detail(self):
-    #    d = CategoryDetail(json.loads(json.dumps(self.dataMiddle)))
-    #    self.assertEqual(str(d), "Name = Bestuhlungstyp, Typ = Einfaches Textfeld, Pflichtfeld = 1, geloescht = "
-    #                             "0\nName = Garantie bis, Typ = Datum, Pflichtfeld = 1, geloescht = 1\n")
+    def test_detail(self):
+        d = CategoryDetail(**self.dataMiddle)
+        self.assertEqual(d.detail_list[0].name, DetailArgument(self.dataShort).name)
+        self.assertEqual(d.detail_list[0].typ, DetailArgument(self.dataShort).typ)
+        self.assertNotEqual(d.detail_list[1].name, DetailArgument(self.dataShort).name)
+
 
     def test_category(self):
         string_as_dict = json.loads(json.dumps(self.dataLong))
-        c = Category(string_as_dict["name"], string_as_dict["details"], string_as_dict["deleted"])
+        c = Category(string_as_dict["name"], string_as_dict["contentDescriptions"], string_as_dict["deleted"])
         self.assertEqual(c.getTupel(), ("Raum", "0"))
         #self.assertEqual(str(c), "Kategoriename: Raum, "
         #                         "Kategoriedetails: Name = Bestuhlungstyp, Typ = Einfaches Textfeld, Pflichtfeld = 1, "

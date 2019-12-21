@@ -2,7 +2,7 @@ class DetailArgument:
 	def __init__(self, y):	
 		self.name = y["name"]
 		self.typ = y["typ"]
-		self.mandatory = y["mandatory"]
+		self.mandatory = y["optionalOrMandatory"]
 		self.deleted = y["deleted"]
 
 	#def __str__(self):
