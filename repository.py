@@ -68,7 +68,7 @@ class Repository(RepositoryInterface):
                 attr_id = self.fire_sql(connection, sql_insert_attr_query, True, sql_insert_tupel)
             except:
                 attr_id_query = "SELECT id_attribute FROM attribute WHERE attribute_name = '" + detail.getTupel()[0] + \
-                                "' "
+                                "' "    # dirty Workaround, da prep. Statement mit einem Param nicht ging
                 attr_id = self.fire_sql(connection, attr_id_query, False, tupel=None)
                 attr_id = attr_id[0][0]
             sql_insert_tupel = (cat_key, attr_id, detail.getTupel()[2])
@@ -76,7 +76,7 @@ class Repository(RepositoryInterface):
 
     def list_categories(self, connection):
         sql_select_cat_query = "SELECT C.Category_name AS Name, Count(OC.id_object) AS Anzahl FROM category C " \
-                               "LEFT JOIN object_to_category OC ON C.Category_name = OC.category_name " \
+                               "LEFT JOIN object_to_category OC ON C.Category_name = OC.categorie_name " \
                                "GROUP BY C.Category_name ORDER BY C.Category_name ASC"
         result = self.fire_sql(connection, sql_select_cat_query, False, tupel=None)
         return result
