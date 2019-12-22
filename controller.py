@@ -41,6 +41,7 @@ def call_uc_list_categories():
         result = uc_list_categories.list_categories()
         return result
     except Exception as error:
+        print(str(error))
         return str(error)
 
 
