@@ -41,11 +41,10 @@ def call_uc_list_categories():
         result = uc_list_categories.list_categories()
         return result
     except Exception as error:
-        print(str(error))
         return str(error)
 
 
 if __name__ == '__main__':
-    # app.run(port=5000)
+    #app.run(port=5000)
     app.debug = True
     app.run(host="0.0.0.0", port=5000)

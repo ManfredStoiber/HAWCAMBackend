@@ -9,17 +9,17 @@ class UcCreateCategoryTest(unittest.TestCase):
             "1": {
                 "name": "Bestuhlungstyp",
                 "typ": "Einfaches Textfeld",
-                "optionalOrMandatory": "1",
-                "deleted": "0"
+                "optionalOrMandatory": 1,
+                "deleted": 0
             },
             "2": {
                 "name": "Garantie bis",
                 "typ": "Datum",
-                "optionalOrMandatory": "1",
-                "deleted": "1"
+                "optionalOrMandatory": 1,
+                "deleted": 1
             }
         },
-        "deleted": "0"
+        "deleted": 0
     }
 
     data_false = {
