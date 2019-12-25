@@ -27,7 +27,7 @@ class ControllerTest(unittest.TestCase):
             },
             "deleted": "0"
         }
-        response = urllib.request.urlopen("http://snirps.ddns.net:5000/api/v1.0/createCategory")
+        response = urllib.request.urlopen("http://snirps.ddns.net:5001/api/v1.0/createCategory")
         json_data = response.get_json()
         self.assertEqual(json_data, jsonify(data))
 
@@ -37,7 +37,7 @@ class ControllerTest(unittest.TestCase):
 
     def test_server_is_up_and_running(self):
         self.create_app()
-        response = urllib.request.urlopen("http://snirps.ddns.net:5000/api/v1.0/listCategories")
+        response = urllib.request.urlopen("http://snirps.ddns.net:5001/api/v1.0/listCategories")
         self.assertEqual(response.code, 200)
 
     if __name__ == "__main__":

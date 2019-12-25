@@ -15,7 +15,7 @@ class Repository(RepositoryInterface):
                 connection.commit()
                 return cursor.lastrowid
             except mysql.connector.Error as error:
-                print("parameterized query failed {}".format(error))
+                #print("parameterized query failed {}".format(error))
                 raise
             finally:
                 cursor.close()

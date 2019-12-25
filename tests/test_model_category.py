@@ -45,15 +45,21 @@ class ModelCategoryTest(unittest.TestCase):
         "deleted": 0
     }
 
+    dataShort2 = {
+        "name": "Format",
+        "typ": "Einfaches Textfeld",
+        "optionalOrMandatory": 1,
+        "deleted": 0
+    }
+
     def test_detail_argument(self):
         da = DetailArgument(self.dataShort)
         self.assertEqual(da.getTupel(), ("Bestuhlungstyp", "Einfaches Textfeld", 1, 0))
 
     def test_detail(self):
         d = CategoryDetail(**self.dataMiddle)
-        self.assertEqual(d.detail_list[0].name, DetailArgument(self.dataShort).name)
-        self.assertEqual(d.detail_list[0].typ, DetailArgument(self.dataShort).typ)
-        self.assertNotEqual(d.detail_list[1].name, DetailArgument(self.dataShort).name)
+        self.assertIn(DetailArgument(self.dataShort), d.detail_list)
+        self.assertNotIn(DetailArgument(self.dataShort2), d.detail_list)
 
     def test_category(self):
         string_as_dict = json.loads(json.dumps(self.dataLong))
