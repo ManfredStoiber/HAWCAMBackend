@@ -8,14 +8,13 @@ class Repository(RepositoryInterface):
         super().__init__(model, uc)
 
     def fire_sql(self, connection, query, prepared, tupel):
-        if (prepared == True):
+        if (prepared is True):
             try:
                 cursor = connection.cursor(prepared=True)
                 cursor.execute(query, tupel)
                 connection.commit()
                 return cursor.lastrowid
             except mysql.connector.Error as error:
-                #print("parameterized query failed {}".format(error))
                 raise
             finally:
                 cursor.close()
@@ -30,27 +29,6 @@ class Repository(RepositoryInterface):
                 raise
             finally:
                 cursor.close()
-
-    def check_insert_with_select(self, connection):
-        mycursor = connection.cursor()
-        mycursor.execute("Select * From category")
-        myresult = mycursor.fetchall()
-        for x in myresult:
-            print("Category " + str(x))
-        mycursor.execute("Select * From attribute")
-        myresult = mycursor.fetchall()
-        for x in myresult:
-            print("Attribute " + str(x))
-        mycursor.execute("Select * From category_to_attribute")
-        myresult = mycursor.fetchall()
-        for x in myresult:
-            print("Attribute_to_Category: " + str(x))
-
-    def delete_table_data(self, connection):
-        mycursor = connection.cursor()
-        mycursor.execute("Delete From category_to_attribute")
-        mycursor.execute("Delete From category")
-        mycursor.execute("Delete From attribute")
 
     def create_category(self, model, connection):
         sql_insert_cat_query = "INSERT INTO category (Category_name, deleted) VALUES (%s, %s)"
@@ -85,12 +63,21 @@ class Repository(RepositoryInterface):
         connection = mysql.connector.connect(host="remotemysql.com", user="xbKMa0eIqY", passwd="wqGNkrfAkK",
                                              db="xbKMa0eIqY", connect_timeout=1000)
         if self.uc == "createCategory":
-            # self.delete_table_data(connection)
             self.create_category(self.model, connection)
-            self.check_insert_with_select(connection)
         elif self.uc == "listCategories":
             result = self.list_categories(connection)
             return result
-        else:
-            print("Nichts weiter")
         connection.close()
+
+    def delete(self, table, condition):
+        try:
+            connection = mysql.connector.connect(host="remotemysql.com", user="xbKMa0eIqY", passwd="wqGNkrfAkK",
+                                                 db="xbKMa0eIqY", connect_timeout=1000)
+            query = "Delete From " + table + " Where " + condition + ";"
+            cursor = connection.cursor()
+            cursor.execute(query)
+            cursor.close()
+            connection.commit()
+            connection.close()
+        except:
+            raise
