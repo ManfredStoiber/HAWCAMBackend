@@ -1,5 +1,6 @@
 class DetailArgument:
-	def __init__(self, y):	
+	def __init__(self, y):
+		print("DetailArgument(y) -> y = " + str(type(y)))
 		self.name = y["name"]
 		self.typ = y["typ"]
 		self.mandatory = y["optionalOrMandatory"]
@@ -20,6 +21,7 @@ class CategoryDetail:
 		for x, y in self.__dict__.items():
 			if i < (len(self.__dict__)-1):
 				self.detail_list[i] = DetailArgument(y)
+				print("CategoryDetail -> y = " + str(type(y)))
 				i = i + 1
 	#def __str__(self):
 	#	temp = ""
