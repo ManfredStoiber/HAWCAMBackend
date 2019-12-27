@@ -19,7 +19,7 @@ class CategoryDetail:
 		self.detail_list = [None] * len(self.__dict__)
 		i = 0
 		for x, y in self.__dict__.items():
-			print("Category: x=" + type(x) + "=" + str(x))
+			print("Category: x=" + type(x))
 			print("Category: y=" + type(y) + "=" + str(y))
 			if i < (len(self.__dict__)-1):
 				print("CategoryDetail -> y = " + str(type(y)))
