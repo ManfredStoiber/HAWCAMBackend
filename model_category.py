@@ -19,8 +19,8 @@ class CategoryDetail:
 		self.detail_list = [None] * len(self.__dict__)
 		i = 0
 		for x, y in self.__dict__.items():
-			print("Category: x=" + str(type(x)) + "=" + str(x))
-			print("Category: y=" + str(type(y)) + "=" + str(y))
+			print("Lauf " + str(i) + " Category: x=" + str(type(x)) + "=" + str(x))
+			print("Lauf " + str(i) + " Category: y=" + str(type(y)) + "=" + str(y))
 			if i < (len(self.__dict__)-1):
 				print("CategoryDetail -> y = " + str(type(y)))
 				self.detail_list[i] = DetailArgument(y)
