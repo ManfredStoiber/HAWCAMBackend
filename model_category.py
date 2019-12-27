@@ -20,8 +20,8 @@ class CategoryDetail:
 		i = 0
 		for x, y in self.__dict__.items():
 			if i < (len(self.__dict__)-1):
-				self.detail_list[i] = DetailArgument(y)
 				print("CategoryDetail -> y = " + str(type(y)))
+				self.detail_list[i] = DetailArgument(y)
 				i = i + 1
 	#def __str__(self):
 	#	temp = ""
