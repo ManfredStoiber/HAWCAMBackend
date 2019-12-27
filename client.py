@@ -1,19 +1,24 @@
 import requests
 import json
 
-
 data = {
-    "name": "hallo14",
+    "name": "Raum",
     "contentDescriptions": {
         "1": {
-            "name": "Bestuhlungstypalösjdfljas",
-            "typ": "Einfaches Textfeldaölsdjfölasjd",
+            "name": "Bestuhlungstyp",
+            "typ": "Einfaches Textfeld",
             "optionalOrMandatory": 0,
             "deleted": 0
         },
         "2": {
-            "name": "Garantie bisalsdjfölas",
-            "typ": "Datumaölsdjfljasd",
+            "name": "Garantie bis",
+            "typ": "Datum",
+            "optionalOrMandatory": 0,
+            "deleted": 1
+        },
+        "3": {
+            "name": "Stuhlform",
+            "typ": "Einfaches Textfeld",
             "optionalOrMandatory": 0,
             "deleted": 1
         }
@@ -22,14 +27,14 @@ data = {
 }
 
 # Call local Service
-responseCreateCategory = requests.put('http://localhost:5000/api/v1.0/createCategory', json.dumps(data).encode())
-print(responseCreateCategory.text)
+#responseCreateCategory = requests.put('http://localhost:5000/api/v1.0/createCategory', json.dumps(data).encode())
+#print(responseCreateCategory.text)
 #responseListCategories = requests.get('http://localhost:5000/api/v1.0/listCategories')
 #print(responseListCategories.text)
 
 # Call global Services
-#responseCreateCategory = requests.put('http://snirps.ddns.net:5000/api/v1.0/createCategory', json.dumps(data).encode())
-#print(responseCreateCategory.text)
+responseCreateCategory = requests.put('http://snirps.ddns.net:5001/api/v1.0/createCategory', json.dumps(data).encode())
+print(responseCreateCategory.content)
 #responseListCategories = requests.get('http://snirps.ddns.net:5001/api/v1.0/listCategories')
 #print(responseListCategories.text)
 

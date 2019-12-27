@@ -28,5 +28,5 @@ class UcCreateCategoryTest(unittest.TestCase):
     }
 
     def test_create_category(self):
-        with self.assertRaises(mysql.connector.errors.IntegrityError): create_category(self.data_true) #Raum ist schon in der Datenbank vorhanden
-        with self.assertRaises(KeyError): create_category(self.data_false) #HalloHallo noch nicht vorhanden, aber falsches Format -> darf nicht True sein
+        with self.assertRaises(mysql.connector.errors.IntegrityError): create_category(self.data_true) # Raum schon vorhanden
+        with self.assertRaises(KeyError): create_category(self.data_false)
