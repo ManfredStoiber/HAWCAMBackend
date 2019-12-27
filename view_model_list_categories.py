@@ -15,6 +15,7 @@ class ViewModelListCategories:
                 "count": x[1]
             }
             categories_as_dict.append(category_as_dict)
+        categories_as_dict = sorted(categories_as_dict, key=lambda x: x["name"])
         return json.dumps({"categories": categories_as_dict})
 
 

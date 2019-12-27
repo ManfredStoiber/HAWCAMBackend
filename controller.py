@@ -1,26 +1,9 @@
 from flask import Flask, send_from_directory, request, jsonify
 from flask_cors import CORS
-import uc_create_category, uc_list_categories
+import uc_create_category, uc_list_categories, traceback
 
 app = Flask(__name__, static_url_path='')
 CORS(app)
-
-data = {
-    "categories": [
-        {
-            "name": "Raum",
-            "count": 3
-        },
-        {
-            "name": "Buch",
-            "count": 14
-        },
-        {
-            "name": "Rechner",
-            "count": 10
-        }
-    ]
-}
 
 
 @app.route('/api/v1.0/createCategory', methods=['PUT'])
@@ -31,7 +14,8 @@ def call_uc_create_category():
         print("call_uc_create_category()")
         return content
     except Exception as error:
-        return str(error)
+        print(traceback.format_exc())
+        return str(traceback.format_exc())
 
 
 @app.route("/api/v1.0/listCategories", methods=["GET"])
