@@ -28,8 +28,10 @@ def call_uc_list_categories():
 
 
 # dummy-Service
-@app.route("/api/v1.0/listAttributesForCategory", methods=["GET"])
+@app.route("/api/v1.0/listAttributesForCategory", methods=["PUT"]) # put mit jeweiligem Kategoriename
 def call_uc_list_attributes():
+    content = request.get_json(force=True)
+    print(content)
     data = {
         "attributes":
             [
