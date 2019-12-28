@@ -1,6 +1,5 @@
 class DetailArgument:
 	def __init__(self, y):
-		print("DetailArgument(y) -> y = " + str(type(y)))
 		self.name = y["name"]
 		self.typ = y["typ"]
 		self.mandatory = y["optionalOrMandatory"]
