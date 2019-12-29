@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import uc_create_category, uc_list_categories, traceback
+import traceback
+import uc_create_category
+import uc_list_categories
+import uc_create_object_list_attributes
 
 app = Flask(__name__, static_url_path='')
 CORS(app)
@@ -31,16 +34,8 @@ def call_uc_list_categories():
 @app.route("/api/v1.0/listAttributesForCategory", methods=["PUT"]) # put mit jeweiligem Kategoriename
 def call_uc_list_attributes():
     content = request.get_json(force=True)
-    print(content)
-    data = {
-        "attributes":
-            [
-                {"name": "Bezeichung", "typ": "Einfaches Textfeld", "mandatory": "1"},
-                {"name": "Hersteller", "typ": "Einfaches Textfeld", "mandatory": "0"},
-                {"name": "KaufDatum", "typ": "Datum", "mandatory": "1"}
-            ]
-    }
-    return jsonify(data)
+    result = uc_create_object_list_attributes.get_attributes(content)
+    return result
 
 
 # dummy-Service
