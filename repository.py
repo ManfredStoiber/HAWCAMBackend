@@ -59,15 +59,13 @@ class Repository(RepositoryInterface):
         result = self.fire_sql(connection, sql_select_cat_query, False, tupel=None)
         return result
 
-    def connect_with_db(self):
-        connection = mysql.connector.connect(host="remotemysql.com", user="xbKMa0eIqY", passwd="wqGNkrfAkK",
-                                             db="xbKMa0eIqY", connect_timeout=1000)
-        if self.uc == "createCategory":
-            self.create_category(self.model, connection)
-        elif self.uc == "listCategories":
-            result = self.list_categories(connection)
-            return result
-        connection.close()
+    def list_attributes(self, connection, category):
+        sql_select_cat_query = "SELECT a.attribute_name, a.attribute_datatype, ca.mandatory " \
+                               "FROM category_to_attribute ca " \
+                               "INNER JOIN attribute a ON ca.id_attribute = a.id_attribute " \
+                               "WHERE ca.Category_name = " + str(category) + ";"
+        result = self.fire_sql(connection, sql_select_cat_query, False, tupel=None)
+        return result
 
     def delete(self, table, condition):
         try:
@@ -81,3 +79,16 @@ class Repository(RepositoryInterface):
             connection.close()
         except:
             raise
+
+    def connect_with_db(self, *argv):
+        connection = mysql.connector.connect(host="remotemysql.com", user="xbKMa0eIqY", passwd="wqGNkrfAkK",
+                                             db="xbKMa0eIqY", connect_timeout=1000)
+        if self.uc == "createCategory":
+            self.create_category(self.model, connection)
+        elif self.uc == "listCategories":
+            result = self.list_categories(connection)
+            return result
+        elif self.uc == "listAttributes":
+            result = self.list_attributes(connection, argv[0])
+            return result
+        connection.close()

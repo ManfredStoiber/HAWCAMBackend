@@ -1,5 +1,4 @@
 import json
-from model_category import Category
 
 
 class ViewModelListCategories:
