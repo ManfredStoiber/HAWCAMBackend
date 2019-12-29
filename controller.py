@@ -3,7 +3,7 @@ from flask_cors import CORS
 import traceback
 import uc_create_category
 import uc_list_categories
-import uc_create_object_list_attributes
+import uc_list_attributes
 
 app = Flask(__name__, static_url_path='')
 CORS(app)
@@ -30,11 +30,10 @@ def call_uc_list_categories():
         return str(error)
 
 
-# dummy-Service
 @app.route("/api/v1.0/listAttributesForCategory", methods=["PUT"]) # put mit jeweiligem Kategoriename
 def call_uc_list_attributes():
     content = request.get_json(force=True)
-    result = uc_create_object_list_attributes.get_attributes(content)
+    result = uc_list_attributes.get_attributes(content)
     return result
 
 
@@ -46,6 +45,6 @@ def call_uc_create_object():
 
 
 if __name__ == '__main__':
-    # app.run(port=5000)
-    app.debug = True
-    app.run(host="0.0.0.0", port=5000)
+    app.run(port=5000)
+    # app.debug = True
+    # app.run(host="0.0.0.0", port=5000)

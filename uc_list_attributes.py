@@ -12,5 +12,3 @@ def get_attributes(content):
     return vm.create_json()
 
 
-def create_object():
-    print("blalba")
