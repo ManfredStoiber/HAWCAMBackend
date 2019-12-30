@@ -9,6 +9,10 @@ app = Flask(__name__, static_url_path='')
 CORS(app)
 
 
+def create_error_json(content):
+    return {"Fehler": content}
+
+
 @app.route('/api/v1.0/createCategory', methods=['PUT'])
 def call_uc_create_category():
     content = request.get_json(force=True)
@@ -54,6 +58,3 @@ if __name__ == '__main__':
     app.debug = True
     app.run(host="0.0.0.0", port=5000)
 
-
-def create_error_json(content):
-    return {"Fehler": content}
