@@ -16,4 +16,5 @@ class VmListAttributes:
             }
             attributes_as_dict.append(attribute_as_dict)
         attributes_as_dict = sorted(attributes_as_dict, key=lambda y: y["name"])
-        return json.dumps({"name": category, "attributes": attributes_as_dict})
+        print(category[1:-1])
+        return json.dumps({"name": category[1:-1], "attributes": attributes_as_dict})
