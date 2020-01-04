@@ -8,7 +8,7 @@ class DetailArgument:
 	#def __str__(self):
 	#	return "Name = " + str(self.name) + ", Typ = " + str(self.typ) + ", Pflichtfeld = " + str(self.mandatory) + ", geloescht = " + str(self.deleted)
 
-	def getTupel(self):
+	def get_tuple(self):
 		return (self.name, self.typ, self.mandatory, self.deleted)
 
 
@@ -38,5 +38,5 @@ class Category:
 	#def __str__(self):
 	#	return "Kategoriename = " + str(self.name) + ", Kategoriedetails: " + str(self.details) + "Kategorie geloescht: " + str(self.deleted)
 
-	def getTupel(self):
+	def get_tuple(self):
 		return (self.name, self.deleted)
