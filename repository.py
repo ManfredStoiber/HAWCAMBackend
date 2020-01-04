@@ -30,27 +30,27 @@ class Repository(RepositoryInterface):
             finally:
                 cursor.close()
 
-    def create_category(self, model, connection):
+    def create_category(self, connection):
         sql_insert_cat_query = "INSERT INTO category (Category_name, deleted) VALUES (%s, %s)"
-        sql_insert_tupel = model.getTupel()
-        cat_key = sql_insert_tupel[0]
-        self.fire_sql(connection, sql_insert_cat_query, True, sql_insert_tupel)  # idCategories hier irrelevant
+        sql_insert_tuple = self.model.get_tuple()
+        cat_key = sql_insert_tuple[0]
+        self.fire_sql(connection, sql_insert_cat_query, True, sql_insert_tuple)  # idCategories hier irrelevant
         sql_insert_attr_query = "INSERT INTO attribute (attribute_name, attribute_datatype, deleted) VALUES (%s, %s, " \
                                 "%s) "
         sql_insert_relation_query = "INSERT INTO category_to_attribute (category_name, id_attribute, mandatory) " \
                                     "VALUES (%s, %s, %s) "
-        for detail in model.details.detail_list:
+        for detail in self.model.details.detail_list:
             try:
-                temp_tupel = (detail.getTupel()[0], detail.getTupel()[1], detail.getTupel()[3])  # ohne mandatory
-                sql_insert_tupel = temp_tupel
-                attr_id = self.fire_sql(connection, sql_insert_attr_query, True, sql_insert_tupel)
+                temp_tuple = (detail.get_tuple()[0], detail.get_tuple()[1], detail.get_tuple()[3])  # ohne mandatory
+                sql_insert_tuple = temp_tuple
+                attr_id = self.fire_sql(connection, sql_insert_attr_query, True, sql_insert_tuple)
             except:
-                attr_id_query = "SELECT id_attribute FROM attribute WHERE attribute_name = '" + detail.getTupel()[0] + \
+                attr_id_query = "SELECT id_attribute FROM attribute WHERE attribute_name = '" + detail.get_tuple()[0] + \
                                 "' "    # dirty Workaround, da prep. Statement mit einem Param nicht ging
                 attr_id = self.fire_sql(connection, attr_id_query, False, tupel=None)
                 attr_id = attr_id[0][0]
-            sql_insert_tupel = (cat_key, attr_id, detail.getTupel()[2])
-            self.fire_sql(connection, sql_insert_relation_query, True, sql_insert_tupel)
+            sql_insert_tuple = (cat_key, attr_id, detail.get_tuple()[2])
+            self.fire_sql(connection, sql_insert_relation_query, True, sql_insert_tuple)
 
     def list_categories(self, connection):
         sql_select_cat_query = "SELECT C.Category_name AS Name, Count(OC.id_object) AS Anzahl FROM category C " \
@@ -66,6 +66,24 @@ class Repository(RepositoryInterface):
                                "WHERE ca.Category_name = " + str(category) + ";"
         result = self.fire_sql(connection, sql_select_cat_query, False, tupel=None)
         return result
+
+    def create_object(self, connection):
+        sql_insert_obj_query = "INSERT INTO object (object_name, object_deleted) VALUES (%s, %s)"
+        sql_insert_obj_tuple = self.model.get_tuple()
+        obj_key = self.fire_sql(connection, sql_insert_obj_query, True, sql_insert_obj_tuple)
+        sql_insert_relation_query = "INSERT INTO object_to_category (id_object, categorie_name) VALUES (%s, %s) "
+        sql_insert_relation_tuple = (obj_key, self.model.cat_name)
+        self.fire_sql(connection, sql_insert_relation_query, True, sql_insert_relation_tuple)
+        i = 1
+        for detail in self.model.details.detail_list:
+            sql_alter_query = "ALTER TABLE object ADD " + str(self.model.name) + "_" + str(i) + " VARCHAR(255)"
+            cursor = connection.cursor()
+            cursor.execute(sql_alter_query)
+            cursor.close()
+            sql_insert_obj_value_query = "UPDATE object SET " + self.model.name + "_" + str(i) + " = %s WHERE object_name = %s"
+            sql_insert_obj_value_tuple = (detail, self.model.name)
+            self.fire_sql(connection, sql_insert_obj_value_query, True, sql_insert_obj_value_tuple)
+            i = i + 1
 
     def delete(self, table, condition):
         try:
@@ -84,11 +102,13 @@ class Repository(RepositoryInterface):
         connection = mysql.connector.connect(host="remotemysql.com", user="xbKMa0eIqY", passwd="wqGNkrfAkK",
                                              db="xbKMa0eIqY", connect_timeout=1000)
         if self.uc == "createCategory":
-            self.create_category(self.model, connection)
+            self.create_category(connection)
         elif self.uc == "listCategories":
             result = self.list_categories(connection)
             return result
         elif self.uc == "listAttributes":
             result = self.list_attributes(connection, argv[0])
             return result
+        elif self.uc == "createObject":
+            self.create_object(connection)
         connection.close()

@@ -9,6 +9,6 @@ def get_attributes(content):
     category = content["catName"]
     result = r.connect_with_db(category)
     vm = VmListAttributes(result)
-    return vm.create_json()
+    return vm.create_json(category)
 
 

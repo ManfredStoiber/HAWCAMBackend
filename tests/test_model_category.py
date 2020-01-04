@@ -54,7 +54,7 @@ class ModelCategoryTest(unittest.TestCase):
 
     def test_detail_argument(self):
         da = DetailArgument(self.dataShort)
-        self.assertEqual(da.getTupel(), ("Bestuhlungstyp", "Einfaches Textfeld", 1, 0))
+        self.assertEqual(da.get_tuple(), ("Bestuhlungstyp", "Einfaches Textfeld", 1, 0))
 
     def test_detail(self):
         d = CategoryDetail(**self.dataMiddle)
@@ -68,7 +68,7 @@ class ModelCategoryTest(unittest.TestCase):
     def test_category(self):
         string_as_dict = json.loads(json.dumps(self.dataLong))
         c = Category(string_as_dict["name"], string_as_dict["contentDescriptions"], string_as_dict["deleted"])
-        self.assertEqual(c.getTupel(), ("Raum", 0))
+        self.assertEqual(c.get_tuple(), ("Raum", 0))
 
     def compareDetailArgument(self, obj1, obj2):
         if obj1.name != obj2.name or obj1.typ != obj2.typ or obj1.mandatory != obj2.mandatory or \

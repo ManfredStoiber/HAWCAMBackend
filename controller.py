@@ -4,6 +4,7 @@ import traceback
 import uc_create_category
 import uc_list_categories
 import uc_list_attributes
+import uc_create_object
 
 app = Flask(__name__, static_url_path='')
 CORS(app)
@@ -15,8 +16,8 @@ def create_error_json(content):
 
 @app.route('/api/v1.0/createCategory', methods=['PUT'])
 def call_uc_create_category():
-    content = request.get_json(force=True)
     try:
+        content = request.get_json(force=True)
         uc_create_category.create_category(content)
         return content
     except Exception as error:
@@ -35,8 +36,8 @@ def call_uc_list_categories():
 
 @app.route("/api/v1.0/listAttributesForCategory", methods=["PUT"])  # put mit jeweiligem Kategoriename
 def call_uc_list_attributes():
-    content = request.get_json(force=True)
     try:
+        content = request.get_json(force=True)
         result = uc_list_attributes.get_attributes(content)
         return result
     except Exception as error:
@@ -48,6 +49,7 @@ def call_uc_list_attributes():
 def call_uc_create_object():
     try:
         content = request.get_json(force=True)
+        uc_create_object.create_object(content)
         return content
     except Exception as error:
         return create_error_json(str(error))

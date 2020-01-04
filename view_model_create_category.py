@@ -1,4 +1,3 @@
-import json
 from model_category import *
 
 
