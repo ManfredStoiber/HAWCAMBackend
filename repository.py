@@ -74,16 +74,19 @@ class Repository(RepositoryInterface):
         sql_insert_relation_query = "INSERT INTO object_to_category (id_object, categorie_name) VALUES (%s, %s) "
         sql_insert_relation_tuple = (obj_key, self.model.cat_name)
         self.fire_sql(connection, sql_insert_relation_query, True, sql_insert_relation_tuple)
-        i = 1
+        # i = 1
         for detail in self.model.details.detail_list:
-            sql_alter_query = "ALTER TABLE object ADD " + str(self.model.name) + "_" + str(i) + " VARCHAR(255)"
-            cursor = connection.cursor()
-            cursor.execute(sql_alter_query)
-            cursor.close()
-            sql_insert_obj_value_query = "UPDATE object SET " + self.model.name + "_" + str(i) + " = %s WHERE object_name = %s"
-            sql_insert_obj_value_tuple = (detail, self.model.name)
-            self.fire_sql(connection, sql_insert_obj_value_query, True, sql_insert_obj_value_tuple)
-            i = i + 1
+            sql_insert_obj_attr_query = "INSERT INTO attribute_to_object (value, id_object) VALUES (%s, %s)"
+            sql_insert_obj_attr_tuple = (detail, obj_key)
+            self.fire_sql(connection, sql_insert_obj_attr_query, True, sql_insert_obj_attr_tuple)
+            # sql_alter_query = "ALTER TABLE object ADD " + str(self.model.name) + "_" + str(i) + " VARCHAR(255)"
+            # cursor = connection.cursor()
+            # cursor.execute(sql_alter_query)
+            # cursor.close()
+            # sql_insert_obj_value_query = "UPDATE object SET " + self.model.name + "_" + str(i) + " = %s WHERE object_name = %s"
+            # sql_insert_obj_value_tuple = (detail, self.model.name)
+            # self.fire_sql(connection, sql_insert_obj_value_query, True, sql_insert_obj_value_tuple)
+            # i = i + 1
 
     def delete(self, table, condition):
         try:
