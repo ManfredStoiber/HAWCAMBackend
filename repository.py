@@ -79,14 +79,19 @@ class Repository(RepositoryInterface):
             sql_insert_obj_attr_query = "INSERT INTO attribute_to_object (value, id_object) VALUES (%s, %s)"
             sql_insert_obj_attr_tuple = (detail, obj_key)
             self.fire_sql(connection, sql_insert_obj_attr_query, True, sql_insert_obj_attr_tuple)
-            # sql_alter_query = "ALTER TABLE object ADD " + str(self.model.name) + "_" + str(i) + " VARCHAR(255)"
-            # cursor = connection.cursor()
-            # cursor.execute(sql_alter_query)
-            # cursor.close()
-            # sql_insert_obj_value_query = "UPDATE object SET " + self.model.name + "_" + str(i) + " = %s WHERE object_name = %s"
-            # sql_insert_obj_value_tuple = (detail, self.model.name)
-            # self.fire_sql(connection, sql_insert_obj_value_query, True, sql_insert_obj_value_tuple)
-            # i = i + 1
+
+    def search(self, connection, search):
+        sql_search_cat_query = "SELECT Category_name FROM category WHERE Category_name LIKE '%" + str(search[1:-1]) + "%'"
+        result_cat = self.fire_sql(connection, sql_search_cat_query, False, tupel=None)
+        sql_search_obj_query = "SELECT O.object_name, OC.categorie_name FROM object O " \
+                               "INNER JOIN object_to_category OC ON O.id_object = OC.id_object " \
+                               "WHERE O.object_name LIKE '%" + str(search[1:-1]) + "%'"
+        result_obj = self.fire_sql(connection, sql_search_obj_query, False, tupel=None)
+        print("result_cat = " + str(result_cat))
+        print("result_obj = " + str(result_obj))
+        result = result_cat + result_obj
+        print("result = " + str(result))
+        return result
 
     def delete(self, table, condition):
         try:
@@ -114,4 +119,7 @@ class Repository(RepositoryInterface):
             return result
         elif self.uc == "createObject":
             self.create_object(connection)
+        elif self.uc == "search":
+            result = self.search(connection, argv[0])
+            return result
         connection.close()
