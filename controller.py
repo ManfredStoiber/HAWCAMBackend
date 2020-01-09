@@ -5,6 +5,7 @@ import uc_create_category
 import uc_list_categories
 import uc_list_attributes
 import uc_create_object
+import uc_search
 
 app = Flask(__name__, static_url_path='')
 CORS(app)
@@ -98,6 +99,18 @@ def call_uc_create_object():
         return create_error_json(str(error))
 
 
+@app.route("/api/v1.0/search", methods=["PUT"])
+def call_uc_search():
+    try:
+        content = request.get_json(force=True)
+        result = uc_search.search(content)
+        return result
+        #return jsonify(data_search)
+    except Exception as error:
+        print(traceback.format_exc())
+        return create_error_json(str(error))
+
+
 # dummy-Service
 @app.route("/api/v1.0/editCategory", methods=["PUT"])
 def call_uc_edit_category():
@@ -124,36 +137,6 @@ def call_uc_list_object_details():
     try:
         content = request.get_json(force=True)
         return jsonify(data_object_details)
-    except Exception as error:
-        return create_error_json(str(error))
-
-
-# dummy-Service
-@app.route("/api/v1.0/search", methods=["PUT"])
-def call_uc_search():
-    try:
-        content = request.get_json(force=True)
-        return jsonify(data_search)
-    except Exception as error:
-        return create_error_json(str(error))
-
-
-# dummy-Service
-@app.route("/api/v1.0/searchFailed", methods=["PUT"])
-def call_uc_search_failed():
-    try:
-        content = request.get_json(force=True)
-        return jsonify(data_search_failed)
-    except Exception as error:
-        return create_error_json(str(error))
-
-
-# dummy-Service
-@app.route("/api/v1.0/searchOneObject", methods=["PUT"])
-def call_uc_search_one_object():
-    try:
-        content = request.get_json(force=True)
-        return jsonify(data_search_one_object)
     except Exception as error:
         return create_error_json(str(error))
 
