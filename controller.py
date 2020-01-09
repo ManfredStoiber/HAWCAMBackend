@@ -141,26 +141,6 @@ def call_uc_list_object_details():
         return create_error_json(str(error))
 
 
-# dummy-Service
-@app.route("/api/v1.0/searchFailed", methods=["PUT"])
-def call_uc_search_failed():
-    try:
-        content = request.get_json(force=True)
-        return jsonify(data_search_failed)
-    except Exception as error:
-        return create_error_json(str(error))
-
-
-# dummy-Service
-@app.route("/api/v1.0/searchOneObject", methods=["PUT"])
-def call_uc_search_one_object():
-    try:
-        content = request.get_json(force=True)
-        return jsonify(data_search_one_object)
-    except Exception as error:
-        return create_error_json(str(error))
-
-
 if __name__ == '__main__':
     # app.run(port=5000)
     app.debug = True

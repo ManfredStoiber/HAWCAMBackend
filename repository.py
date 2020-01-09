@@ -81,11 +81,12 @@ class Repository(RepositoryInterface):
             self.fire_sql(connection, sql_insert_obj_attr_query, True, sql_insert_obj_attr_tuple)
 
     def search(self, connection, search):
-        sql_search_cat_query = "SELECT Category_name FROM category WHERE Category_name LIKE '%" + str(search[1:-1]) + "%'"
+        sql_search_cat_query = "SELECT Category_name FROM category " \
+                               "WHERE UPPER(Category_name) LIKE UPPER('%" + str(search[1:-1]) + "%')"
         result_cat = self.fire_sql(connection, sql_search_cat_query, False, tupel=None)
         sql_search_obj_query = "SELECT O.object_name, OC.categorie_name FROM object O " \
                                "INNER JOIN object_to_category OC ON O.id_object = OC.id_object " \
-                               "WHERE O.object_name LIKE '%" + str(search[1:-1]) + "%'"
+                               "WHERE UPPER(O.object_name) LIKE UPPER('%" + str(search[1:-1]) + "%')"
         result_obj = self.fire_sql(connection, sql_search_obj_query, False, tupel=None)
         print("result_cat = " + str(result_cat))
         print("result_obj = " + str(result_obj))

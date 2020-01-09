@@ -15,12 +15,9 @@ class ViewModelSearch:
             # Aufbrechen des Object-Attributs auf die Zeilen von Kategorie-Select und Objekt-Select
             for x in self.result_set:
                 if len(x) > 1:
-                    obj_tuple = obj_tuple + x
+                    obj_tuple = obj_tuple + (x,)
                 else:
-                    cat_tuple = cat_tuple + x
-
-            obj_tuple = (obj_tuple, )      # Erstellen von Tuples in Tuple, damit auf einzelnes Tuple zugegriffen werden kann mit x weiter unten
-            cat_tuple = (cat_tuple, )
+                    cat_tuple = cat_tuple + (x,)
 
             # Bau eines Dicts [], in dem die Kategorie-Results als Objekte aneinander gereiht werden: Sieht dann so aus: [{}, {}]
             search_as_dict = []
