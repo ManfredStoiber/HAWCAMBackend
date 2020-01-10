@@ -28,16 +28,30 @@ class ControllerTest(unittest.TestCase):
         "deleted": "0"
     }
 
+    data2 = {"catName": "'Raum'"}
+
     def create_app(self):
         self.app = controller.app.test_client()
         app.config['TESTING'] = True
 
-    def test_server_is_up_and_running(self):
+    def test_server_is_up_and_running_create_category(self):
         self.create_app()
         response = requests.put("http://snirps.ddns.net:5001/api/v1.0/createCategory", json.dumps(self.data).encode())
         self.assertEqual(response.status_code, 200)
+    
+    def test_server_is_up_and_running_list_category(self):
         response = urllib.request.urlopen("http://snirps.ddns.net:5001/api/v1.0/listCategories")
         self.assertEqual(response.code, 200)
 
+    def test_server_is_up_and_running_list_attrubutes(self):
+        self.create_app()
+        response = requests.put('http://snirps.ddns.net:5001/api/v1.0/listAttributesForCategory', json.dumps(self.data2).encode())
+        self.assertEqual(response.status_code, 200)
+
+    def test_server_is_up_and_running_invalid(self):
+        self.create_app()
+        response = requests.put('http://snirps.ddns.net:5001/api/v1.0/invalidURL', json.dumps(self.data2).encode())
+        self.assertEqual(response.status_code, 405)
+        
     if __name__ == "__main__":
         unittest.main()
