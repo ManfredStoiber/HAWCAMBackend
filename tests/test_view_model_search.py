@@ -12,10 +12,10 @@ class VmSearch(unittest.TestCase):
 
     def create_test_data_in_db(self, repository):
         connection = self.connect()
-        query = "Insert into category (Category_name, deleted) values (%s)"
+        query = "Insert into category (Category_name, deleted) values (%s, %s)"
         tupel = ("'UnittestVmSearchCategory'", 0)
         repository.fire_sql(connection, query, True, tupel)
-        query = "INSERT INTO object (object_name, object_deleted) VALUES (%s)"
+        query = "INSERT INTO object (object_name, object_deleted) VALUES (%s, %s)"
         tupel = ("'UnittestVmSearchObject'", 0)
         repository.fire_sql(connection, query, True, tupel)
         connection.close()
