@@ -3,38 +3,7 @@ from view_model_search import ViewModelSearch
 from repository import Repository
 
 
-class VmSearch(unittest.TestCase):
-
-    def connect(self):
-        connection = mysql.connector.connect(host="remotemysql.com", user="xbKMa0eIqY", passwd="wqGNkrfAkK",
-                                             db="xbKMa0eIqY", connect_timeout=1000)
-        return connection
-
-    def create_test_data_in_db(self, repository):
-        connection = self.connect()
-        query = "Insert into category (Category_name, deleted) values (%s, %s)"
-        tupel = ("UnittestVmSearchCategory", 0)
-        repository.fire_sql(connection, query, True, tupel)
-        query = "INSERT INTO object (object_name, object_deleted) VALUES (%s, %s)"
-        tupel = ("UnittestVmSearchObject", 0)
-        obj_key = repository.fire_sql(connection, query, True, tupel)
-        query = "INSERT INTO object_to_category (id_object, categorie_name) VALUES (%s, %s) "
-        tupel = (obj_key, "UnittestVmSearchCategory")
-        repository.fire_sql(connection, query, True, tupel)
-        connection.close()    
-
-    def clean(self, repository):
-        repository.delete("object_to_category", "categorie_name = 'UnittestVmSearchCategory'")
-        repository.delete("category", "Category_name = 'UnittestVmSearchCategory'")
-        repository.delete("object", "object_name = 'UnittestVmSearchObject'")
-
-    def get_test_set(self):
-        repository = Repository(model=None, uc="search")
-        self.create_test_data_in_db(repository)
-        search_pattern = "UnittestVmSearch"
-        result = repository.connect_with_db(search_pattern)
-        self.clean(repository)
-        return result
+class VmSearchTest(unittest.TestCase):
 
     def test_view_model_search_empty_set(self):
         test_set = {}
@@ -43,7 +12,7 @@ class VmSearch(unittest.TestCase):
         self.assertEqual(result, json.dumps({"categories": [], "objects": []}))
 
     def test_view_model_search_filled_set(self):
-        test_set = self.get_test_set()
+        test_set = {("UnittestVmSearchCategory",), ("UnittestVmSearchObject", "UnittestVmSearchCategory")}
         vm = ViewModelSearch(test_set)
         result = vm.create_json()
         self.assertEqual(result, json.dumps({"categories": [{"name": "UnittestVmSearchCategory"}],
