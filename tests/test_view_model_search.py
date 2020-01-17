@@ -24,9 +24,9 @@ class VmSearch(unittest.TestCase):
         connection.close()
 
     def clean(self, repository):
+        repository.delete("object_to_category", "categorie_name = 'UnittestVmSearchCategory'")
         repository.delete("category", "Category_name = 'UnittestVmSearchCategory'")
         repository.delete("object", "object_name = 'UnittestVmSearchObject'")
-        repository.delete("object_to_category", "categorie_name = 'UnittestVmSearchCategory'")
 
     def get_test_set(self):
         repository = Repository(model=None, uc="search")
