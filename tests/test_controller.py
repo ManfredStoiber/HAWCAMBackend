@@ -53,6 +53,21 @@ class ControllerTest(unittest.TestCase):
         response = requests.put('http://snirps.ddns.net:5001/api/v1.0/search', json.dumps({"search": "'Raum'"}).encode())
         self.assertEqual(response.status_code, 200)
 
+    def test_server_is_up_and_running_list_object_details(self):
+        self.create_app()
+        response = requests.put('http://snirps.ddns.net:5001/api/v1.0/listObjectDetails', json.dumps({"objName": "'R123'"}).encode())
+        self.assertEqual(response.status_code, 200)
+
+    def test_server_is_up_and_running_edit_object(self):
+        self.create_app()
+        response = requests.put('http://snirps.ddns.net:5001/api/v1.0/editObject', json.dumps({"bla": "bla"}).encode())
+        self.assertEqual(response.status_code, 200)
+
+    def test_server_is_up_and_running_edit_category(self):
+        self.create_app()
+        response = requests.put('http://snirps.ddns.net:5001/api/v1.0/editCategory', json.dumps({"bla": "bla"}).encode())
+        self.assertEqual(response.status_code, 200)
+
     def test_server_is_up_and_running_invalid(self):
         self.create_app()
         response = requests.put('http://snirps.ddns.net:5001/api/v1.0/invalidURL', json.dumps(self.data2).encode())
