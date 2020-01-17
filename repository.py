@@ -88,10 +88,7 @@ class Repository(RepositoryInterface):
                                "INNER JOIN object_to_category OC ON O.id_object = OC.id_object " \
                                "WHERE UPPER(O.object_name) LIKE UPPER('%" + str(search[1:-1]) + "%')"
         result_obj = self.fire_sql(connection, sql_search_obj_query, False, tupel=None)
-        print("result_cat = " + str(result_cat))
-        print("result_obj = " + str(result_obj))
         result = result_cat + result_obj
-        print("result = " + str(result))
         return result
 
     def delete(self, table, condition):

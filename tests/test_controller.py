@@ -43,9 +43,14 @@ class ControllerTest(unittest.TestCase):
         response = urllib.request.urlopen("http://snirps.ddns.net:5001/api/v1.0/listCategories")
         self.assertEqual(response.code, 200)
 
-    def test_server_is_up_and_running_list_attrubutes(self):
+    def test_server_is_up_and_running_list_attributes(self):
         self.create_app()
         response = requests.put('http://snirps.ddns.net:5001/api/v1.0/listAttributesForCategory', json.dumps(self.data2).encode())
+        self.assertEqual(response.status_code, 200)
+
+    def test_server_is_up_and_running_search(self):
+        self.create_app()
+        response = requests.put('http://snirps.ddns.net:5001/api/v1.0/search', json.dumps({"search": "'Raum'"}).encode())
         self.assertEqual(response.status_code, 200)
 
     def test_server_is_up_and_running_invalid(self):
