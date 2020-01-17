@@ -21,7 +21,7 @@ class VmSearch(unittest.TestCase):
         query = "INSERT INTO object_to_category (id_object, categorie_name) VALUES (%s, %s) "
         tupel = (obj_key, "UnittestVmSearchCategory")
         repository.fire_sql(connection, query, True, tupel)
-        connection.close()
+        connection.close()    
 
     def clean(self, repository):
         repository.delete("object_to_category", "categorie_name = 'UnittestVmSearchCategory'")
