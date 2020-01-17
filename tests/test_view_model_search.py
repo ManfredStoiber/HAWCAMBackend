@@ -17,12 +17,16 @@ class VmSearch(unittest.TestCase):
         repository.fire_sql(connection, query, True, tupel)
         query = "INSERT INTO object (object_name, object_deleted) VALUES (%s, %s)"
         tupel = ("'UnittestVmSearchObject'", 0)
+        obj_key = repository.fire_sql(connection, query, True, tupel)
+        query = "INSERT INTO object_to_category (id_object, categorie_name) VALUES (%s, %s) "
+        tupel = (obj_key, "UnittestVmSearchCategory")
         repository.fire_sql(connection, query, True, tupel)
         connection.close()
 
     def clean(self, repository):
         repository.delete("category", "Category_name = 'UnittestVmSearchCategory'")
         repository.delete("object", "object_name = 'UnittestVmSearchObject'")
+        repository.delete("object_to_category", "categorie_name = 'UnittestVmSearchCategory'")
 
     def get_test_set(self):
         repository = Repository(model=None, uc="search")
@@ -43,4 +47,4 @@ class VmSearch(unittest.TestCase):
         vm = ViewModelSearch(test_set)
         result = vm.create_json()
         self.assertEqual(result, json.dumps({"categories": [{"name": "UnittestVmSearchCategory"}],
-                                             "objects": [{"name": "UnittestVmSearchObject"}]}))
+                                             "objects": [{"name": "UnittestVmSearchObject", "cat": "UnittestVmSearchCategory"}]}))
