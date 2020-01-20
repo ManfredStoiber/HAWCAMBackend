@@ -94,20 +94,19 @@ class RepositoryTest(unittest.TestCase):
         self.assertEqual(result, None)
 
 
-    def test_repository_create_object(self):
+    def test_repository_create_object_fail(self):
         vm = ViewModelCreateObject(json.loads(json.dumps(
-        {
-            "catName": "Raum",
-            "objObjName": "TRaum",
-            "details": {
-                "Detail1": "Nordseite",
-                "Detail2": 80,
-                "Detail3": "Jürgen Terpin"
+            {
+                "catName": "Raum",
+                "objObjName": "TRaum",
+                "details": {
+                    "Detail1": "Nordseite",
+                    "Detail2": 80,
+                    "Detail3": "Jürgen Terpin"
+                }
             }
-        }
         )))
         mo = vm.to_model()
         repo = Repository(mo, "createObject")
-        result = repo.connect_with_db("createObject")
-        with self.assertRaises(IntegrityError):(result, None) #brauche hilfe
+        with self.assertRaises(mysql.connector.errors.IntegrityError): repo.connect_with_db()
   
