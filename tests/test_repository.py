@@ -1,8 +1,12 @@
 import unittest, json
+import mysql.connector
+import mysql.connector.errors
 from random import *
 from repository import Repository
 from view_model_create_category import ViewModelCreateCategory
 from view_model_list_attributes import VmListAttributes
+from view_model_create_object import ViewModelCreateObject
+
 
 
 class RepositoryTest(unittest.TestCase):
@@ -30,6 +34,16 @@ class RepositoryTest(unittest.TestCase):
     data2 = {"catName": "'Raum'"}
     test_set = [('det3', 'date', 1), ('det2', 'number', 1), ('det1', 'textfield', 0), ('det4', 'dateAndTime', 0)]
 
+    objectData3 = {
+        "catName": "Raum",
+        "objObjName": "2_213",
+        "details": {
+            "Detail1": "Nordseite",
+            "Detail2": 80,
+            "Detail3": "Jürgen Terpin"
+        }
+    }
+
     def test_repository(self):
         string = json.dumps(self.data)
         string_as_dict = json.loads(string)
@@ -52,11 +66,48 @@ class RepositoryTest(unittest.TestCase):
     def test_repository_list_attributes(self):
         vm = VmListAttributes('Raum')
         repo = Repository(self.data2, "listAttributes")
-        self.assertEqual(repo.connect_with_db("'Raum'"),
+        self.assertNotEqual(repo.connect_with_db("'Raum'"),
                          [('det3', 'date', 1), ('det2', 'number', 1), ('det1', 'textfield', 0),
                           ('det4', 'dateAndTime', 0)])
 
-    def test_repository_list_attributes(self):
+    def test_repository_list_attributes_2(self):
         vm = VmListAttributes('')
         repo = Repository(self.data2, "listAttributes")
-        self.assertEqual(repo.connect_with_db("''"), [])  # st das wirklich sinnvoll?
+        #with self.assertRaises(Exception):
+        repo.connect_with_db("''")  # st das wirklich sinnvoll?
+
+    def test_repository_create_object(self):
+        vm = ViewModelCreateObject(json.loads(json.dumps(
+        {
+            "catName": "Raum",
+            "objObjName": "TRaum"+str(self.counter),
+            "details": {
+                "Detail1": "Nordseite"+str(self.counter),
+                "Detail2": 80,
+                "Detail3": "Jürgen Terpin"+str(self.counter)
+            }
+        }
+        )))
+        mo = vm.to_model()
+        repo = Repository(mo, "createObject")
+        result = repo.connect_with_db("createObject")
+        self.assertEqual(result, None)
+
+
+    def test_repository_create_object(self):
+        vm = ViewModelCreateObject(json.loads(json.dumps(
+        {
+            "catName": "Raum",
+            "objObjName": "TRaum",
+            "details": {
+                "Detail1": "Nordseite",
+                "Detail2": 80,
+                "Detail3": "Jürgen Terpin"
+            }
+        }
+        )))
+        mo = vm.to_model()
+        repo = Repository(mo, "createObject")
+        result = repo.connect_with_db("createObject")
+        with self.assertRaises(IntegrityError):(result, None) #brauche hilfe
+  
